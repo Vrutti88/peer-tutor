@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Peer Tutor — Login / Sign Up</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="login.js" defer></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">PeerTutor</div>
+  </header>
+
+  <!-- Auth Container -->
+  <div class="container login-box">
+    <div class="toggle-buttons">
+      <button id="signupToggle" class="toggle-btn active">Sign Up</button>
+      <button id="loginToggle" class="toggle-btn">Login</button>
+    </div>
+
+    <!-- Login Form (hidden by default) -->
+    <form id="loginForm" class="form-grid auth-form hidden">
+      <div class="form-row">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-row">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" placeholder="********" required/>
+      </div>
+      <button type="submit" class="btn full-btn">Login</button>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signupForm" class="form-grid auth-form">
+      <div class="form-row">
+        <label for="signupName">Full Name</label>
+        <input id="signupName" type="text" placeholder="Riya Sharma" required/>
+      </div>
+      <div class="form-row">
+        <label for="signupEmail">Email</label>
+        <input id="signupEmail" type="email" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-row">
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" type="password" placeholder="********" required/>
+      </div>
+      <button type="submit" class="btn full-btn">Sign Up</button>
+    </form>
+
+    <div class="divider">OR</div>
+
+    <!-- Google Login -->
+    <div class="social-login">
+      <button type="button" id="googleLoginBtn" class="btn google-btn full-btn">
+        <img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="G"/>
+        Continue with Google
+      </button>
+    </div>
+
+    <p id="status" class="hint center"></p>
+  </div>
+
+  <script>
+    // Toggle between Login & Signup forms
+    const loginToggle = document.getElementById("loginToggle");
+    const signupToggle = document.getElementById("signupToggle");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    loginToggle.addEventListener("click", () => {
+      loginForm.classList.remove("hidden");
+      signupForm.classList.add("hidden");
+      loginToggle.classList.add("active");
+      signupToggle.classList.remove("active");
+    });
+
+    signupToggle.addEventListener("click", () => {
+      signupForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+      signupToggle.classList.add("active");
+      loginToggle.classList.remove("active");
+    });
+  </script>
+</body>
+</html>

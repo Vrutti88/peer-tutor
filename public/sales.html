@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Sales Panel — Peer Tutor</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="sales.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">PeerTutor</div>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="index.html">New Lead</a>
+      <a href="findMatches.html">Find Peers</a>
+    </nav>
+  </header>
+
+  <div class="container sales-container">
+    <h2>Sales Panel</h2>
+    <p class="hint">Login to claim top leads and manage assignments.</p>
+
+    <div class="sales-grid">
+      <!-- Login Section -->
+      <div class="card">
+        <h3>Login</h3>
+        <div class="form-row">
+          <label>Email</label>
+          <input id="email" placeholder="sales@example.com"/>
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="secret"/>
+        </div>
+        <button id="loginBtn" class="btn">Login</button>
+        <p id="loginStatus" class="hint"></p>
+      </div>
+
+      <!-- Claim Leads Section -->
+      <div class="card">
+        <h3>Claim Top Leads</h3>
+        <button id="claimBtn" class="btn btn-outline">Claim Top 5 Leads</button>
+        <div id="claimed" class="claimed-list"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

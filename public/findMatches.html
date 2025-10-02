@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Find Peers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="findMatches.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">
+        <div class="logo">PT</div>
+        <div>
+          <div class="title">Find Peer Matches</div>
+          <div style="font-size:0.9rem;color:var(--muted)">Reciprocal peer tutoring</div>
+        </div>
+      </div>
+      <div class="actions"><a href="./dashboard.html">Dashboard</a></div>
+    </div>
+
+    <!-- Content -->
+    <div>
+      <button id="findBtn" class="btn">🔍 Find Peers</button>
+      <div id="matches" class="matches-grid" style="margin-top:1rem"></div>
+    </div>
+  </div>
+</body>
+</html>

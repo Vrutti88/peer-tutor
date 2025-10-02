@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Peer Tutoring — Lead Capture</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="lead.js" defer></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">PeerTutor</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales.html">Sales Panel</a>
+    </nav>
+  </header>
+
+  <!-- Form Container -->
+  <div class="container">
+    <form id="leadForm">
+      <div class="form-header">
+        <h2>Join as Learner or Peer</h2>
+        <button class="btn submit-btn" type="submit">Submit & Go to Dashboard</button>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="name">Full name</label>
+          <input id="name" name="name" required placeholder="Riya Sharma"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="phone">Phone (optional)</label>
+          <input id="phone" placeholder="+91-98XXXXXX"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="city">City</label>
+          <input id="city" placeholder="Delhi"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="canTeach">Subjects you can teach</label>
+          <input id="canTeach" placeholder="Math-Class10, English-Class10"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="wantsToLearn">Subjects you want to learn</label>
+          <input id="wantsToLearn" placeholder="Physics-Class11"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="board">Board / Level</label>
+          <input id="board" placeholder="CBSE / Class 10"/>
+        </div>
+        
+        <div class="form-row">
+          <label for="notes">Notes (optional)</label>
+          <input id="notes" placeholder="Preferred days/times"/>
+        </div>
+      </div>
+      <p class="hint">We’ll match you with peers who can teach your requested topics. Your details are safe.</p>
+
+      <!-- <div class="social-login">
+        <button class="btn submit-btn" type="submit">Submit & Go to Dashboard</button>
+      </div> -->
+    </form>
+
+    <div class="divider">OR</div>
+
+    <div class="social-login">
+      <button type="button" id="googleLoginBtn" class="btn google-btn">
+        <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="G logo"/>
+        Sign in with Google
+      </button>
+    </div>
+
+    <p id="status" class="hint" style="color:green"></p>
+  </div>
+</body>
+</html>
