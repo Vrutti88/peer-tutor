@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Peer Tutoring — Lead Capture</title>
   <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="lead.js" defer></script>
+  <script type="module" src="profile.js" defer></script>
+  <!-- <script type="module" src="lead.js" defer></script> -->
 </head>
 <body>
   <!-- Navbar -->
@@ -15,14 +16,15 @@
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
     </nav>
+    <button id="logoutBtn" class="btn">Logout</button>
   </header>
 
   <!-- Form Container -->
   <div class="container">
-    <form id="leadForm">
+    <form id="profileForm">
       <div class="form-header">
-        <h2>Join as Learner or Peer</h2>
-        <button class="btn submit-btn" type="submit">Submit & Go to Dashboard</button>
+        <h2>My Profile</h2>
+        <button class="btn submit-btn" type="submit">Save</button>
       </div>
       
       <div class="form-grid">
@@ -65,7 +67,6 @@
               <option value="Expert">Expert</option>
             </select>
           </div>
-          
         
         <div class="form-row">
           <label for="notes">Notes (optional)</label>

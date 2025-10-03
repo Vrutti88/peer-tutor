@@ -1,0 +1,61 @@
+/* Features Section */
+.cont.py-5 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  
+  .cont.py-5 .row.text-center.mb-5 h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+  }
+  
+  .cont.py-5 .row.text-center.mb-5 p {
+    font-size: 1rem;
+    color: #6b7280;
+  }
+  
+  .cont.py-5 .row.g-4 > div {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .cont.py-5 .text-center.p-4 {
+    background-color: #fff;
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .cont.py-5 .text-center.p-4:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+  }
+  
+  .cont.py-5 .step-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 1rem;
+  }
+  
+  .cont.py-5 .text-center.p-4 h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .cont.py-5 .text-center.p-4 p {
+    font-size: 0.95rem;
+    color: #4b5563;
+  }
+  
+  /* Responsive Features */
+  @media (max-width: 768px) {
+    .cont.py-5 .row.g-4 {
+      flex-direction: column;
+    }
+  }
+  

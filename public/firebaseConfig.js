@@ -2,7 +2,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 
 export const firebaseConfig = {
-    
+    apiKey: "AIzaSyAII2zqdoqrFV4qo0uzhy1fl23ONTxMmak",
+    authDomain: "peer-tutor-c144b.firebaseapp.com",
+    projectId: "peer-tutor-c144b",
+    storageBucket: "peer-tutor-c144b.firebasestorage.app",
+    messagingSenderId: "822349243049",
+    appId: "1:822349243049:web:7a21e5d2b103493e83bfb8",
+    measurementId: "G-FK5QGLJ5QL"
 };
 
 export const app = initializeApp(firebaseConfig);

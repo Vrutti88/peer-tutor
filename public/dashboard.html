@@ -1,204 +1,217 @@
 <!doctype html>
 <html>
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Peer Tutor — Dashboard</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <script type="module" src="dashboard.js" defer></script>
 </head>
+
 <body>
-<header class="navbar">
-  <div class="logo">PeerTutor</div>
-  <nav>
-    <a href="./">Home</a>
-    <a href="login.html">Signup/Login</a>
-    <a href="dashboard.html">Dashboard</a>
-  </nav>
-  
-  <div class="profile-card">
-    <div class="profile-info">
-      <div class="avatar" id="avatarClick">👤</div>
-      <div>
-        <h3 id="profileName">User</h3>
+  <header class="navbar">
+    <div class="logo">PeerTutor</div>
+    <nav>
+      <a href="./">Home</a>
+      <a href="login.html">Signup/Login</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+
+    <div class="profile-card">
+      <div class="profile-info">
+        <div class="avatar" id="avatarClick">👤</div>
+        <div>
+          <h3 id="profileName">User</h3>
+        </div>
       </div>
     </div>
+  </header>
+
+
+
+  <!-- 🔹 Added Sections Below -->
+  <div class="container">
+
+    <!-- <div id="userProfile" class="section">
+      <h2>My Profile</h2>
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <div class="metric-label">Name</div>
+          <div id="profileName2" class="metric-value" style="font-size: 1.2rem;">N/A</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Email</div>
+          <div id="profileEmail" class="metric-value" style="font-size: 1rem;">N/A</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Role</div>
+          <div id="profileRole" class="metric-value" style="font-size: 1.2rem;">N/A</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total Sessions</div>
+          <div id="profileSessions" class="metric-value">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Stage</div>
+          <div id="profileStage" class="metric-value" style="font-size: 1.2rem;">N/A</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Profile Score</div>
+          <div id="profileScore" class="metric-value">0</div>
+        </div>
+      </div>
+      <p><strong>Subjects:</strong> <span id="profileSubjects">N/A</span></p>
+      <p><strong>Availability:</strong> <span id="profileAvailability">N/A</span></p>
+      <p><strong>Location:</strong> <span id="profileLocation">N/A</span></p>
+      <p><strong>Rating:</strong> <span id="profileRating">N/A</span></p>
+    </div> -->
+
+    <div class="two-column">
+      <!-- Quick Match Section -->
+      <section class="section">
+        <h2>Quick Match (Find a Tutor)</h2>
+        <form id="matchForm">
+          <label>Subject:</label>
+          <input type="text" id="matchSubject" placeholder="mathematics">
+
+          <label>Preferred Time Slot:</label>
+          <input type="text" id="matchTimeSlot" placeholder="Mon 10-12">
+
+          <button type="submit" class="btn">Find Best Tutor</button>
+        </form>
+        <div id="matchResult"></div>
+      </section>
+
+      <!-- Book Session Section -->
+      <section class="section">
+        <h2>Book a Session</h2>
+        <form id="bookingForm">
+          <label>Tutor Email:</label>
+          <input type="email" id="bookTutorEmail" placeholder="tutor@example.com" required>
+
+          <label>Session Time:</label>
+          <input type="text" id="bookTime" placeholder="Mon 10-12" required>
+
+          <label>Subject:</label>
+          <input type="text" id="bookSubject" placeholder="mathematics" required>
+
+          <button type="submit" class="btn">Book Session</button>
+        </form>
+        <p class="form-message" id="bookingMessage"></p>
+      </section>
+    </div>
+
+
+    <!-- Extended Real-Time Dashboard -->
+    <section class="section">
+      <h2>📊 Real-Time Dashboard</h2>
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <h3>Total Users</h3>
+          <p class="metric-value" id="totalUsers">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Prospects</h3>
+          <p class="metric-value" id="prospectCount">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Qualified</h3>
+          <p class="metric-value" id="qualifiedCount">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Customers</h3>
+          <p class="metric-value" id="customerCount">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Loyal</h3>
+          <p class="metric-value" id="loyalCount">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Total Sessions</h3>
+          <p class="metric-value" id="totalSessions">0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Business Metrics (Demo)</h2>
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <h4>Avg RFM Score</h4>
+          <p class="metric-value" id="avgRFM">0</p>
+        </div>
+        <div class="metric-card">
+          <h4>Avg CLV ($)</h4>
+          <p class="metric-value" id="avgCLV">0</p>
+        </div>
+        <div class="metric-card">
+          <h4>NPS Score</h4>
+          <p class="metric-value" id="npsScore">0</p>
+        </div>
+      </div>
+
+      <h3>Active Users (Last 7 Days)</h3>
+      <p class="metric-value" id="activeUsers7d">0</p>
+    </section>
+
+    <!-- Admin Tools Section -->
+    <section class="section">
+      <h2>⚙️ Admin Tools</h2>
+
+      <div class="admin-tool">
+        <h3>Load Sample Data</h3>
+        <button id="loadSampleDataBtn" class="btn">Load Sample Data</button>
+        <p class="form-message" id="sampleDataMessage"></p>
+      </div>
+
+      <div class="admin-tool">
+        <h3>Qualify Lead</h3>
+        <form id="qualifyForm">
+          <input type="email" id="qualifyEmail" placeholder="user@example.com" required>
+          <button type="submit" class="btn">Qualify Lead</button>
+        </form>
+        <p class="form-message" id="qualifyMessage"></p>
+      </div>
+
+      <div class="admin-tool">
+        <h3>Analyze Referral Network</h3>
+        <form id="referralForm">
+          <input type="email" id="referralEmail" placeholder="user@example.com" required>
+          <button type="submit" class="btn">Analyze Network</button>
+        </form>
+        <div id="referralResult"></div>
+      </div>
+
+      <div class="admin-tool">
+        <h3>Compute Metrics</h3>
+        <button id="computeMetricsBtn" class="btn">Recalculate All Metrics</button>
+        <p class="form-message" id="metricsMessage"></p>
+      </div>
+    </section>
   </div>
-</header>
-
-<!-- <div class="container">
-  <h2>Dashboard</h2> -->
-  
-  <!-- <div class="metrics">
-    <div class="card"><div>NPS</div><div id="nps" class="value">—</div></div>
-    <div class="card"><div>Avg CLV</div><div id="clv" class="value">—</div></div>
-    <div class="card"><div>Leads</div><div id="leadsCount" class="value">—</div></div>
-    <div class="card"><div>Low Stock</div><div id="lowStock" class="value">—</div></div>
-  </div> -->
-
-  <!-- <h3>Recent Leads</h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>City</th>
-        <th>Can Teach</th>
-        <th>Wants To Learn</th>
-        <th>Stage</th>
-      </tr>
-    </thead>
-    <tbody id="leadsBody"></tbody>
-  </table>
-</div> -->
-
-<!-- 🔹 Added Sections Below -->
-<div class="container">
-
-  <div class="two-column">
-    <!-- Quick Match Section -->
-  <section class="section">
-    <h2>Quick Match (Find a Tutor)</h2>
-    <form id="matchForm">
-      <label>Subject:</label>
-      <input type="text" id="matchSubject" placeholder="mathematics">
-      
-      <label>Preferred Time Slot:</label>
-      <input type="text" id="matchTimeSlot" placeholder="Mon 10-12">
-      
-      <button type="submit" class="btn">Find Best Tutor</button>
-    </form>
-    <div id="matchResult"></div>
-  </section>
-
-  <!-- Book Session Section -->
-  <section class="section">
-    <h2>Book a Session</h2>
-    <form id="bookingForm">
-      <label>Tutor Email:</label>
-      <input type="email" id="bookTutorEmail" placeholder="tutor@example.com" required>
-      
-      <label>Session Time:</label>
-      <input type="text" id="bookTime" placeholder="Mon 10-12" required>
-      
-      <label>Subject:</label>
-      <input type="text" id="bookSubject" placeholder="mathematics" required>
-      
-      <button type="submit" class="btn">Book Session</button>
-    </form>
-    <p class="form-message" id="bookingMessage"></p>
-  </section>
-  </div>
-  
-
-  <!-- Extended Real-Time Dashboard -->
-  <section class="section">
-    <h2>📊 Real-Time Dashboard</h2>
-    <div class="dashboard-grid">
-      <div class="metric-card">
-        <h3>Total Users</h3>
-        <p class="metric-value" id="totalUsers">0</p>
-      </div>
-      <div class="metric-card">
-        <h3>Prospects</h3>
-        <p class="metric-value" id="prospectCount">0</p>
-      </div>
-      <div class="metric-card">
-        <h3>Qualified</h3>
-        <p class="metric-value" id="qualifiedCount">0</p>
-      </div>
-      <div class="metric-card">
-        <h3>Customers</h3>
-        <p class="metric-value" id="customerCount">0</p>
-      </div>
-      <div class="metric-card">
-        <h3>Loyal</h3>
-        <p class="metric-value" id="loyalCount">0</p>
-      </div>
-      <div class="metric-card">
-        <h3>Total Sessions</h3>
-        <p class="metric-value" id="totalSessions">0</p>
-      </div>
-    </div>
-
-    <h3>Channel Performance</h3>
-    <div id="channelStats"></div>
-
-    <h3>Business Metrics (Demo)</h3>
-    <div class="dashboard-grid">
-      <div class="metric-card">
-        <h4>Avg RFM Score</h4>
-        <p class="metric-value" id="avgRFM">0</p>
-      </div>
-      <div class="metric-card">
-        <h4>Avg CLV ($)</h4>
-        <p class="metric-value" id="avgCLV">0</p>
-      </div>
-      <div class="metric-card">
-        <h4>NPS Score</h4>
-        <p class="metric-value" id="npsScore">0</p>
-      </div>
-    </div>
-
-    <h3>Active Users (Last 7 Days)</h3>
-    <p class="metric-value" id="activeUsers7d">0</p>
-  </section>
-
-  <!-- Admin Tools Section -->
-  <section class="section">
-    <h2>⚙️ Admin Tools</h2>
-    
-    <div class="admin-tool">
-      <h3>Load Sample Data</h3>
-      <button id="loadSampleDataBtn" class="btn">Load Sample Data</button>
-      <p class="form-message" id="sampleDataMessage"></p>
-    </div>
-
-    <div class="admin-tool">
-      <h3>Qualify Lead</h3>
-      <form id="qualifyForm">
-        <input type="email" id="qualifyEmail" placeholder="user@example.com" required>
-        <button type="submit" class="btn">Qualify Lead</button>
-      </form>
-      <p class="form-message" id="qualifyMessage"></p>
-    </div>
-
-    <div class="admin-tool">
-      <h3>Analyze Referral Network</h3>
-      <form id="referralForm">
-        <input type="email" id="referralEmail" placeholder="user@example.com" required>
-        <button type="submit" class="btn">Analyze Network</button>
-      </form>
-      <div id="referralResult"></div>
-    </div>
-
-    <div class="admin-tool">
-      <h3>Compute Metrics</h3>
-      <button id="computeMetricsBtn" class="btn">Recalculate All Metrics</button>
-      <p class="form-message" id="metricsMessage"></p>
-    </div>
-  </section>
-</div>
 
 
 
-<!-- Profile Modal -->
-<div id="profileModal" class="modal">
-  <div class="modal-content">
-    <span id="closeProfileModal" class="close">&times;</span>
-    <h3>Edit Profile</h3>
-    <label>Name</label>
-    <input id="profileInputName" type="text"/>
-    <label>Email</label>
-    <input id="profileInputEmail" type="email"/>
-    <label>City</label>
-    <input id="profileInputCity" type="text"/>
-    <label>Can Teach</label>
-    <input id="profileInputTeach" type="text"/>
-    <label>Wants To Learn</label>
-    <input id="profileInputLearn" type="text"/>
-    <button id="saveProfileBtn" class="btn">Save</button>
-    <p id="profileStatus" class="hint"></p>
-  </div>
+  <!-- Profile Modal -->
+  <!-- <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <span id="closeProfileModal" class="close">&times;</span>
+      <h3>Edit Profile</h3>
+      <label>Name</label>
+      <input id="profileInputName" type="text" />
+      <label>Email</label>
+      <input id="profileInputEmail" type="email" />
+      <label>City</label>
+      <input id="profileInputCity" type="text" />
+      <label>Can Teach</label>
+      <input id="profileInputTeach" type="text" />
+      <label>Wants To Learn</label>
+      <input id="profileInputLearn" type="text" />
+      <button id="saveProfileBtn" class="btn">Save</button>
+      <p id="profileStatus" class="hint"></p>
+    </div> -->
 
 </body>
+
 </html>

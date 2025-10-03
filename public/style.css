@@ -31,7 +31,7 @@ body {
   justify-content: space-between;
   align-items: center;
   height: 110px;
-  padding: 0 1rem;
+  padding: 0 2rem;
   background: white;
   box-shadow: var(--shadow);
 }
@@ -52,6 +52,43 @@ body {
 
 .navbar nav a:hover {
   color: var(--accent);
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.profile-info .avatar {
+  width: 50px;
+  height: 50px;
+  background: var(--accent-light);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.profile-info .avatar:hover {
+  transform: scale(1.1);
+}
+
+.profile-info h3 {
+  font-size: 1rem;
+  color: var(--accent);
+  margin: 0;
 }
 
 /* Hero */
@@ -145,12 +182,46 @@ h2 {
   box-shadow: 0 0 6px rgba(79,70,229,0.3);
 }
 
+/* Dropdown styling to match input fields */
+.form-row select {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  /* background-color: #fff; */
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  appearance: none; /* removes default arrow in some browsers */
+}
+
+.form-row select:focus {
+  border: 1px solid var(--accent);
+  outline: none;
+  box-shadow: 0 0 6px rgba(79,70,229,0.3);
+}
+
+/* Optional: add some spacing for dropdown options */
+.form-row select option {
+  padding: 0.6rem 1rem;
+}
+
+/* Add a custom arrow (optional) */
+.form-row select {
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem 1rem;
+}
+
+
 .hint {
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: var(--muted);
   text-align: center;
 }
+
+
 
 /* Animations */
 @keyframes fadeIn {
@@ -593,52 +664,15 @@ h2 {
 
 
 
-/* Profile Card */
-.profile-card {
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
-.profile-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
 
-.profile-info .avatar {
-  width: 50px;
-  height: 50px;
-  background: var(--accent-light);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 1.5rem;
-}
-
-.profile-details p {
-  margin: 0.3rem 0;
-  font-size: 0.6rem;
-}
-
-.profile-details strong {
-  color: var(--accent);
-}
-
-.profile-card .btn {
+/* .profile-card .btn {
   align-self: flex-start;
   margin-top: 0.5rem;
-}
+} */
 
 /* Modal */
-.modal {
+/* .modal {
   display: none; 
   position: fixed; 
   z-index: 200; 
@@ -655,7 +689,7 @@ h2 {
   width: 90%;
   max-width: 400px;
   box-shadow: var(--shadow);
-}
+} */
 
 .close {
   float: right;
@@ -668,13 +702,13 @@ h2 {
   color: var(--accent);
 }
 
-.modal input {
+/* .modal input {
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.7rem;
   border-radius: 8px;
   border: 1px solid #ddd;
-}
+} */
 
 
 /* Google Button Updated Styling */

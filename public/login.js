@@ -1,11 +1,12 @@
 import { app } from "./firebaseConfig.js";
 import { 
-  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup 
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 const auth = getAuth(app);
 
 const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
 const googleLoginBtn = document.getElementById("googleLoginBtn");
 const statusEl = document.getElementById("status");
 
@@ -38,6 +39,28 @@ loginForm.addEventListener("submit", async (e) => {
     }
   }
 });
+
+// ------------------ SIGNUP ------------------
+signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+  
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update display name
+      await updateProfile(userCredential.user, { displayName: name });
+  
+      statusEl.textContent = "✅ Account created! Redirecting...";
+      statusEl.style.color = "green";
+      setTimeout(() => window.location.href = "lead.html", 1200);
+    } catch (err) {
+      statusEl.textContent = "❌ " + err.message;
+      statusEl.style.color = "crimson";
+    }
+  });
 
 // Google login (optional, only if present)
 if(googleLoginBtn){
