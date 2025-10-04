@@ -1,9 +1,9 @@
 import { app } from "./firebaseConfig.js";
-import { 
-  getFirestore, doc, getDoc, setDoc 
+import {
+  getFirestore, doc, getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-import { 
-  getAuth, onAuthStateChanged, signOut, updateProfile 
+import {
+  getAuth, onAuthStateChanged, signOut, updateProfile
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 const db = getFirestore(app);
@@ -22,7 +22,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   // Load data from Firestore
-  const docRef = doc(db, "leads", user.uid);
+  const docRef = doc(db, "users", user.uid);
   const snap = await getDoc(docRef);
 
   if (snap.exists()) {
@@ -30,6 +30,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("name").value = data.name || "";
     document.getElementById("email").value = data.email || user.email;
     document.getElementById("skillLevel").value = data.skillLevel || "";
+    document.getElementById("role").value = data.role || "";
     document.getElementById("city").value = data.city || "";
     document.getElementById("canTeach").value = (data.canTeach || []).join(", ");
     document.getElementById("wantsToLearn").value = (data.wantsToLearn || []).join(", ");
@@ -53,15 +54,15 @@ profileForm.addEventListener("submit", async (e) => {
     email: document.getElementById("email").value.trim(),
     skillLevel: document.getElementById("skillLevel").value.trim(),
     city: document.getElementById("city").value.trim(),
-    canTeach: document.getElementById("canTeach").value.split(",").map(s => s.trim()).filter(s=>s),
-    wantsToLearn: document.getElementById("wantsToLearn").value.split(",").map(s => s.trim()).filter(s=>s),
+    canTeach: document.getElementById("canTeach").value.split(",").map(s => s.trim()).filter(s => s),
+    wantsToLearn: document.getElementById("wantsToLearn").value.split(",").map(s => s.trim()).filter(s => s),
     board: document.getElementById("board").value.trim(),
     notes: document.getElementById("notes").value.trim(),
     updatedAt: new Date()
   };
 
   try {
-    await setDoc(doc(db, "leads", user.uid), updatedData, { merge: true });
+    await setDoc(doc(db, "users", user.uid), updatedData, { merge: true });
 
     // update displayName in Firebase Auth too
     if (updatedData.name) {
@@ -85,3 +86,35 @@ if (logoutBtn) {
     });
   });
 }
+
+
+// Elements
+const roleSelect = document.getElementById("role");
+const canTeachRow = document.getElementById("canTeach").parentElement;
+const wantsToLearnRow = document.getElementById("wantsToLearn").parentElement;
+
+// Function to update visibility of subject fields
+function updateSubjectFields() {
+  const role = roleSelect.value;
+
+  if (role === "Tutor") {
+    canTeachRow.style.display = "flex";       // show "Subjects I can teach"
+    wantsToLearnRow.style.display = "none";   // hide "Subjects I need help with"
+    document.getElementById("wantsToLearn").value = "";
+  } else if (role === "Learner") {
+    canTeachRow.style.display = "none";       // hide "Subjects I can teach"
+    wantsToLearnRow.style.display = "flex";   // show "Subjects I need help with"
+    document.getElementById("canTeach").value = "";
+  } else {
+    // default if no role selected
+    canTeachRow.style.display = "none";
+    wantsToLearnRow.style.display = "flex";
+    document.getElementById("canTeach").value = "";
+  }
+}
+
+// Run on page load to set initial visibility
+updateSubjectFields();
+
+// Run whenever role changes
+roleSelect.addEventListener("change", updateSubjectFields);

@@ -61,7 +61,7 @@ function hashEmail(email) {
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    document.getElementById("profileName").textContent =
+    document.getElementById("profileName").textContent = user.displayName ||
       user.email.split("@")[0];
     startDashboardListeners();
   } else {
@@ -225,8 +225,8 @@ function startMetricsListeners() {
       const avgRecency =
         list.length > 0
           ? (
-              list.reduce((s, r) => s + (r.recencyDays || 0), 0) / list.length
-            ).toFixed(1)
+            list.reduce((s, r) => s + (r.recencyDays || 0), 0) / list.length
+          ).toFixed(1)
           : 0;
       document.getElementById("avgRFM").textContent = avgRecency;
     }
@@ -326,3 +326,8 @@ if (avatarClick) {
     window.location.href = "profile.html";
   });
 }
+
+
+document.getElementById("analytics-btn").addEventListener("click", function () {
+  window.location.href = "analytics.html";
+});

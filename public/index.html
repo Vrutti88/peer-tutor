@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peer Tutoring Matching System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
-    <script type="module" src="dashboard.js" defer></script>
 </head>
+
 <body>
     <!-- Navigation -->
     <header class="navbar">
         <div class="logo">PeerTutor</div>
         <nav>
-          <a href="./">Home</a>
-          <a href="login.html">Signup/Login</a>
-          <a href="dashboard.html">Dashboard</a>
+            <a href="./">Home</a>
+            <a href="login.html">Signup/Login</a>
+            <a href="dashboard.html">Dashboard</a>
         </nav>
-        
+
         <div class="profile-card">
-          <div class="profile-info">
-            <div class="avatar" id="avatarClick">👤</div>
-            <div>
-              <h3 id="profileName" style="font-weight: bold;">User</h3>
+            <div class="profile-info">
+                <div class="avatar" id="avatarClick">👤</div>
+                <div>
+                    <h3 id="profileName" style="font-weight: bold;">User</h3>
+                </div>
             </div>
-          </div>
         </div>
-      </header>
+    </header>
 
     <!-- Hero Section -->
     <div class="hero-section">
@@ -34,9 +35,11 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <h1 class="display-4 fw-bold mb-4">Connect. Learn. Grow.</h1>
-                    <p class="lead mb-4">Join our peer tutoring platform where students help students succeed. Whether you're looking to learn or share your knowledge, we match you with the perfect partner.</p>
+                    <p class="lead mb-4">Join our peer tutoring platform where students help students succeed. Whether
+                        you're looking to learn or share your knowledge, we match you with the perfect partner.</p>
                     <div class="d-flex gap-3">
-                        <a href="./login.html" class="btn btn-primary btn-lg" style="color: #0e788b; background-color: white;">Get Started</a>
+                        <a href="./login.html" class="btn btn-primary btn-lg"
+                            style="color: #0e788b; background-color: white;">Get Started</a>
                         <!-- <a href="/login.html" class="btn btn-outline-primary btn-lg">Login</a> -->
                     </div>
                 </div>
@@ -73,14 +76,16 @@
                 <div class="text-center p-4">
                     <div class="step-number mb-3">1</div>
                     <h4>Create Your Profile</h4>
-                    <p class="text-muted">Sign up as a tutor or learner and tell us about your subjects and availability.</p>
+                    <p class="text-muted">Sign up as a tutor or learner and tell us about your subjects and
+                        availability.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center p-4">
                     <div class="step-number mb-3">2</div>
                     <h4>Get Matched</h4>
-                    <p class="text-muted">Our smart algorithm finds the best tutors based on your needs and schedule.</p>
+                    <p class="text-muted">Our smart algorithm finds the best tutors based on your needs and schedule.
+                    </p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -126,4 +131,55 @@
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>
+
+<script type="module">
+    import { app } from "./firebaseConfig.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const profileNameEl = document.getElementById("profileName");
+
+    // 🔹 When user login state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            let displayName = user.displayName || user.email.split("@")[0];
+
+            // Try fetching name from Firestore users collection
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                if (data.name) displayName = data.name;
+            }
+
+            profileNameEl.textContent = displayName;
+        } else {
+            // No user logged in → show default
+            profileNameEl.textContent = "User";
+        }
+    });
+
+
+    // 🔹 Redirect avatar click → profile.html
+    const avatarClick = document.getElementById("avatarClick");
+
+    if (avatarClick) {
+        avatarClick.addEventListener("click", () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // ✅ User is logged in → go to profile
+                    window.location.href = "profile.html";
+                } else {
+                    // ❌ No user → go to login
+                    window.location.href = "login.html";
+                }
+            });
+        });
+    }
+
+</script>
+
+
 </html>

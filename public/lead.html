@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Peer Tutoring — Lead Capture</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <script type="module" src="lead.js" defer></script>
 </head>
+
 <body>
   <!-- Navbar -->
   <header class="navbar">
@@ -24,60 +26,92 @@
         <h2>Join as Learner or Peer</h2>
         <button class="btn submit-btn" type="submit">Submit & Go to Dashboard</button>
       </div>
-      
+
       <div class="form-grid">
         <div class="form-row">
           <label for="name">Full name</label>
-          <input id="name" name="name" required placeholder="Riya Sharma"/>
-        </div>
-        
-        <div class="form-row">
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="you@example.com" required/>
-        </div>
-        
-        <div class="form-row">
-          <label for="city">City</label>
-          <input id="city" placeholder="Delhi"/>
-        </div>
-        
-        <div class="form-row">
-          <label for="canTeach">Subjects you can teach</label>
-          <input id="canTeach" placeholder="Math-Class10, English-Class10"/>
-        </div>
-        
-        <div class="form-row">
-          <label for="wantsToLearn">Subjects you want to learn</label>
-          <input id="wantsToLearn" placeholder="Physics-Class11"/>
-        </div>
-        
-        <div class="form-row">
-          <label for="board">Board / Level</label>
-          <input id="board" placeholder="CBSE / Class 10"/>
+          <input id="name" name="name" required placeholder="Riya Sharma" />
         </div>
 
         <div class="form-row">
-            <label for="skillLevel">Skill Level</label>
-            <select id="skillLevel">
-              <option value="">Select skill level</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Expert">Expert</option>
-            </select>
-          </div>
-          
-        
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" required />
+        </div>
+
+        <div class="form-row">
+          <label for="city">City</label>
+          <input id="city" placeholder="Delhi" />
+        </div>
+
+        <div class="form-row">
+          <label for="role">I want to become</label>
+          <select id="role">
+            <option value="">Select Role</option>
+            <option value="Learner">Learner</option>
+            <option value="Tutor">Tutor</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="wantsToLearn">Subjects I need help with</label>
+          <select id="wantsToLearn">
+            <option value="">Select Subject</option>
+            <option value="Learner">Mathematics</option>
+            <option value="Tutor">English</option>
+            <option value="Learner">History</option>
+            <option value="Tutor">Chemistry</option>
+            <option value="Learner">Physics</option>
+            <option value="Tutor">Computer Science</option>
+            <option value="Learner">Biology</option>
+            <option value="Tutor">Economics</option>
+            <option value="Tutor">Psychology</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="canTeach">Subjects I can teach</label>
+          <select id="canTeach">
+            <option value="">Select Subject</option>
+            <option value="Learner">Mathematics</option>
+            <option value="Tutor">English</option>
+            <option value="Learner">History</option>
+            <option value="Tutor">Chemistry</option>
+            <option value="Learner">Physics</option>
+            <option value="Tutor">Computer Science</option>
+            <option value="Learner">Biology</option>
+            <option value="Tutor">Economics</option>
+            <option value="Tutor">Psychology</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="board">Board / Level</label>
+          <input id="board" placeholder="CBSE / Class 10" />
+        </div>
+
+        <div class="form-row">
+          <label for="skillLevel">Skill Level</label>
+          <select id="skillLevel">
+            <option value="">Select skill level</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Expert">Expert</option>
+          </select>
+        </div>
+
+
         <div class="form-row">
           <label for="notes">Notes (optional)</label>
-          <input id="notes" placeholder="Preferred days/times"/>
+          <input id="notes" placeholder="Preferred days/times" />
         </div>
       </div>
       <p class="hint">We’ll match you with peers who can teach your requested topics. Your details are safe.</p>
     </form>
 
-    
+
 
     <p id="status" class="hint"></p>
   </div>
 </body>
+
 </html>

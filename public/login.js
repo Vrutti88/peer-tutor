@@ -1,5 +1,5 @@
 import { app } from "./firebaseConfig.js";
-import { 
+import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
@@ -29,7 +29,7 @@ loginForm.addEventListener("submit", async (e) => {
         statusEl.textContent = "✅ Account created! Redirecting...";
         statusEl.style.color = "green";
         setTimeout(() => window.location.href = "lead.html", 1200);
-      } catch(regErr) {
+      } catch (regErr) {
         statusEl.textContent = "❌ " + regErr.message;
         statusEl.style.color = "crimson";
       }
@@ -42,28 +42,28 @@ loginForm.addEventListener("submit", async (e) => {
 
 // ------------------ SIGNUP ------------------
 signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = document.getElementById("signupName").value.trim();
-    const email = document.getElementById("signupEmail").value.trim();
-    const password = document.getElementById("signupPassword").value.trim();
-  
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update display name
-      await updateProfile(userCredential.user, { displayName: name });
-  
-      statusEl.textContent = "✅ Account created! Redirecting...";
-      statusEl.style.color = "green";
-      setTimeout(() => window.location.href = "lead.html", 1200);
-    } catch (err) {
-      statusEl.textContent = "❌ " + err.message;
-      statusEl.style.color = "crimson";
-    }
-  });
+  e.preventDefault();
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value.trim();
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+    // Update display name
+    await updateProfile(userCredential.user, { displayName: name });
+
+    statusEl.textContent = "✅ Account created! Redirecting...";
+    statusEl.style.color = "green";
+    setTimeout(() => window.location.href = "lead.html", 1200);
+  } catch (err) {
+    statusEl.textContent = "❌ " + err.message;
+    statusEl.style.color = "crimson";
+  }
+});
 
 // Google login (optional, only if present)
-if(googleLoginBtn){
+if (googleLoginBtn) {
   googleLoginBtn.addEventListener("click", async () => {
     const provider = new GoogleAuthProvider();
     try {

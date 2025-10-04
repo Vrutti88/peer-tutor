@@ -13,9 +13,9 @@
   <header class="navbar">
     <div class="logo">PeerTutor</div>
     <nav>
-      <a href="./">Home</a>
-      <a href="login.html">Signup/Login</a>
-      <a href="dashboard.html">Dashboard</a>
+      <a href="./index.html">Home</a>
+      <a href="./login.html">Signup/Login</a>
+      <a href="./dashboard.html">Dashboard</a>
     </nav>
 
     <div class="profile-card">
@@ -100,117 +100,12 @@
         </form>
         <p class="form-message" id="bookingMessage"></p>
       </section>
+
     </div>
+    <button id="analytics-btn" class="btn" style="width: 50%; display: block; margin: 20px auto;">View
+      analytics</button>
 
-
-    <!-- Extended Real-Time Dashboard -->
-    <section class="section">
-      <h2>📊 Real-Time Dashboard</h2>
-      <div class="dashboard-grid">
-        <div class="metric-card">
-          <h3>Total Users</h3>
-          <p class="metric-value" id="totalUsers">0</p>
-        </div>
-        <div class="metric-card">
-          <h3>Prospects</h3>
-          <p class="metric-value" id="prospectCount">0</p>
-        </div>
-        <div class="metric-card">
-          <h3>Qualified</h3>
-          <p class="metric-value" id="qualifiedCount">0</p>
-        </div>
-        <div class="metric-card">
-          <h3>Customers</h3>
-          <p class="metric-value" id="customerCount">0</p>
-        </div>
-        <div class="metric-card">
-          <h3>Loyal</h3>
-          <p class="metric-value" id="loyalCount">0</p>
-        </div>
-        <div class="metric-card">
-          <h3>Total Sessions</h3>
-          <p class="metric-value" id="totalSessions">0</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Business Metrics (Demo)</h2>
-      <div class="dashboard-grid">
-        <div class="metric-card">
-          <h4>Avg RFM Score</h4>
-          <p class="metric-value" id="avgRFM">0</p>
-        </div>
-        <div class="metric-card">
-          <h4>Avg CLV ($)</h4>
-          <p class="metric-value" id="avgCLV">0</p>
-        </div>
-        <div class="metric-card">
-          <h4>NPS Score</h4>
-          <p class="metric-value" id="npsScore">0</p>
-        </div>
-      </div>
-
-      <h3>Active Users (Last 7 Days)</h3>
-      <p class="metric-value" id="activeUsers7d">0</p>
-    </section>
-
-    <!-- Admin Tools Section -->
-    <section class="section">
-      <h2>⚙️ Admin Tools</h2>
-
-      <div class="admin-tool">
-        <h3>Load Sample Data</h3>
-        <button id="loadSampleDataBtn" class="btn">Load Sample Data</button>
-        <p class="form-message" id="sampleDataMessage"></p>
-      </div>
-
-      <div class="admin-tool">
-        <h3>Qualify Lead</h3>
-        <form id="qualifyForm">
-          <input type="email" id="qualifyEmail" placeholder="user@example.com" required>
-          <button type="submit" class="btn">Qualify Lead</button>
-        </form>
-        <p class="form-message" id="qualifyMessage"></p>
-      </div>
-
-      <div class="admin-tool">
-        <h3>Analyze Referral Network</h3>
-        <form id="referralForm">
-          <input type="email" id="referralEmail" placeholder="user@example.com" required>
-          <button type="submit" class="btn">Analyze Network</button>
-        </form>
-        <div id="referralResult"></div>
-      </div>
-
-      <div class="admin-tool">
-        <h3>Compute Metrics</h3>
-        <button id="computeMetricsBtn" class="btn">Recalculate All Metrics</button>
-        <p class="form-message" id="metricsMessage"></p>
-      </div>
-    </section>
   </div>
-
-
-
-  <!-- Profile Modal -->
-  <!-- <div id="profileModal" class="modal">
-    <div class="modal-content">
-      <span id="closeProfileModal" class="close">&times;</span>
-      <h3>Edit Profile</h3>
-      <label>Name</label>
-      <input id="profileInputName" type="text" />
-      <label>Email</label>
-      <input id="profileInputEmail" type="email" />
-      <label>City</label>
-      <input id="profileInputCity" type="text" />
-      <label>Can Teach</label>
-      <input id="profileInputTeach" type="text" />
-      <label>Wants To Learn</label>
-      <input id="profileInputLearn" type="text" />
-      <button id="saveProfileBtn" class="btn">Save</button>
-      <p id="profileStatus" class="hint"></p>
-    </div> -->
 
 </body>
 

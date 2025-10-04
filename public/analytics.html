@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Peer Tutor — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="analytics.js" defer></script>
+  <script type="module" src="demo-data.js" defer></script>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">PeerTutor</div>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./login.html">Signup/Login</a>
+      <a href="./dashboard.html">Dashboard</a>
+    </nav>
+
+    <div class="profile-card">
+      <div class="profile-info">
+        <div class="avatar" id="avatarClick">👤</div>
+        <div>
+          <h3 id="profileName">User</h3>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- 🔹 Added Sections Below -->
+  <div class="container">
+
+    <!-- Extended Real-Time Dashboard -->
+    <section class="section">
+      <h2>📊 Real-Time Dashboard</h2>
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <h3>Total Users</h3>
+          <p class="metric-value" id="total-users">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Active Users (Last 7 Days)</h3>
+          <p class="metric-value" id="active-users">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Total Sessions</h3>
+          <p class="metric-value" id="total-sessions">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Loyalty Rate</h3>
+          <p class="metric-value" id="loyalty-rate">0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Business Metrics (Demo)</h2>
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <h3>Avg RFM Score</h3>
+          <p class="metric-value" id="avgRFM">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Avg CLV ($)</h3>
+          <p class="metric-value" id="avgCLV">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>NPS Score</h3>
+          <p class="metric-value" id="npsScore">0</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="dashboard-grid"
+        style="grid-template-columns: repeat(3, 1fr); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <div class="metric-card">
+          <h2>Sales Funnel</h2>
+          <div class="chart-container">
+            <canvas id="funnelChart"></canvas>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h2>User Activity (Last 30 Days)</h2>
+          <div class="chart-container">
+            <canvas id="activityChart"></canvas>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h2>Session Status Distribution</h2>
+          <div class="chart-container">
+            <canvas id="sessionChart"></canvas>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h2>Subject Popularity</h2>
+          <div class="chart-container">
+            <canvas id="subjectChart"></canvas>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h2>Referral Network</h2>
+          <div id="referral-network">
+            <p class="text-muted">Total Referrals: <strong id="total-referrals">0</strong></p>
+            <p class="text-muted">Network Depth: <strong id="network-depth">0</strong></p>
+            <button class="btn" onclick="analyzeReferralNetwork()">Analyze Network</button>
+            <div id="referral-details" class="mt-3"></div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <h2>User Stage Distribution</h2>
+          <div id="stage-distribution"></div>
+        </div>
+      </div>
+    </section>
+    <button id="demoBtn" class="btn" onclick="generateDemoData()"
+      style="width: 50%; display: block; margin: 20px auto;">Generate Demo Data</button>
+  </div>
+
+</body>
+
+</html>
