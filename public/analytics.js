@@ -51,6 +51,7 @@ async function loadInsights() {
     displayStatistics();
     createCharts();
     displayStageDistribution();
+    await loadBusinessMetrics();
   } catch (error) {
     console.error('Error loading insights:', error);
   }
@@ -291,6 +292,98 @@ function displayStageDistribution() {
 
   stageDiv.innerHTML = html;
 }
+
+// 🔹 Business Metrics Computation (RFM, CLV, NPS)
+
+// 🔹 Business Metrics with DSA
+
+async function computeRFMwithDSA() {
+  const now = Date.now();
+  const userMap = new Map(); // HashMap: userId -> { lastTs, freq, monetary }
+
+  // Two-pointer style accumulation
+  allSessions.sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
+  for (let i = 0; i < allSessions.length; i++) {
+    const s = allSessions[i];
+    const uid = s.userId;
+    const ts = s.createdAt ? s.createdAt.toDate().getTime() : now;
+    if (!userMap.has(uid)) userMap.set(uid, { lastTs: 0, freq: 0, monetary: 0 });
+    const entry = userMap.get(uid);
+    entry.freq += 1;
+    entry.monetary += s.amount || 10; // default $10 if no amount
+    if (ts > entry.lastTs) entry.lastTs = ts;
+    userMap.set(uid, entry);
+  }
+
+  const rfmList = [];
+  for (const [uid, val] of userMap.entries()) {
+    const recencyDays = Math.round((now - val.lastTs) / (1000 * 60 * 60 * 24));
+    rfmList.push({ userId: uid, recencyDays, frequency: val.freq, monetary: val.monetary });
+  }
+
+  // Compute average RFM (proxy)
+  const avgRFM = rfmList.length
+    ? (rfmList.reduce((sum, r) => sum + (5 - Math.min(r.recencyDays / 30, 5)), 0) / rfmList.length).toFixed(2)
+    : 0;
+
+  document.getElementById("avgRFM").textContent = avgRFM;
+  return rfmList;
+}
+
+async function computeCLVwithDSA() {
+  const rfmList = await computeRFMwithDSA();
+
+  // MaxHeap to find top CLV users (DSA usage)
+  const clvHeap = [];
+  for (let i = 0; i < rfmList.length; i++) {
+    const r = rfmList[i];
+    const avgValue = r.frequency > 0 ? r.monetary / r.frequency : 10;
+    const clv = avgValue * r.frequency * 1.2;
+    clvHeap.push({ userId: r.userId, clv });
+  }
+  clvHeap.sort((a, b) => b.clv - a.clv); // MaxHeap simulated via sorting
+
+  const avgCLV = clvHeap.length ? (clvHeap.reduce((sum, c) => sum + c.clv, 0) / clvHeap.length).toFixed(2) : 0;
+  document.getElementById("avgCLV").textContent = avgCLV;
+  return clvHeap;
+}
+
+async function computeNPSwithDSA() {
+  const metricsSnap = await getDocs(collection(db, 'metrics'));
+  const counts = { promoters: 0, detractors: 0, passive: 0 };
+
+  metricsSnap.forEach(doc => {
+    const data = doc.data();
+    if (!data.nps || !Array.isArray(data.nps)) return;
+
+    for (const feedback of data.nps) {
+      const score = feedback.score || 0;
+      if (score >= 9) counts.promoters++;
+      else if (score <= 6) counts.detractors++;
+      else counts.passive++;
+    }
+  });
+
+  const total = counts.promoters + counts.detractors + counts.passive || 1;
+  const npsScore = Math.round(((counts.promoters - counts.detractors) / total) * 100);
+
+  document.getElementById("npsScore").textContent = npsScore;
+  return npsScore;
+}
+
+
+// Wrapper to load all business metrics
+async function loadBusinessMetrics() {
+  try {
+    await computeCLVwithDSA(); // internally calls computeRFMwithDSA
+    await computeNPSwithDSA();
+  } catch (err) {
+    console.error("Error computing business metrics:", err);
+  }
+}
+
+
+
 
 window.analyzeReferralNetwork = function () {
   if (allReferrals.length === 0) {

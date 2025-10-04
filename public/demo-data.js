@@ -230,6 +230,42 @@ async function generateDemoData() {
       console.log('Created referral');
     }
 
+    const demoBusinessMetrics = {
+      rfm: [
+        { userId: 'demo-learner-1', recencyDays: 5, frequency: 5, monetary: 500 },
+        { userId: 'demo-learner-2', recencyDays: 12, frequency: 2, monetary: 150 },
+        { userId: 'demo-learner-3', recencyDays: 3, frequency: 10, monetary: 900 },
+        { userId: 'demo-learner-4', recencyDays: 8, frequency: 7, monetary: 400 }
+      ],
+      clv: [
+        { userId: 'demo-learner-1', clv: 200 },
+        { userId: 'demo-learner-2', clv: 75 },
+        { userId: 'demo-learner-3', clv: 450 },
+        { userId: 'demo-learner-4', clv: 210 }
+      ],
+      nps: [
+        { userId: 'demo-learner-1', score: 10 },
+        { userId: 'demo-learner-2', score: 8 },
+        { userId: 'demo-learner-3', score: 9 },
+        { userId: 'demo-learner-4', score: 7 }
+      ]
+    };
+
+    for (const r of demoBusinessMetrics.rfm) {
+      await addDoc(collection(db, 'metrics'), { type: 'rfm', ...r });
+      console.log('RFM metric created for', r.userId);
+    }
+    
+    // Add CLV metrics
+    for (const c of demoBusinessMetrics.clv) {
+      await addDoc(collection(db, 'metrics'), { type: 'clv', ...c });
+      console.log('CLV metric created for', c.userId);
+    }
+    
+    // Add NPS metrics
+    await addDoc(collection(db, 'metrics'), { type: 'nps', nps: demoBusinessMetrics.nps });
+    console.log('NPS metrics created');
+
     console.log('Demo data generation complete!');
     alert('Demo data created successfully! You now have 5 tutors, 4 learners, 5 sessions, and 3 referrals.');
 
