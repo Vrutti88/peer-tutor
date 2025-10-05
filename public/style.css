@@ -198,6 +198,19 @@ h2 {
   /* removes default arrow in some browsers */
 }
 
+.form-row select[multiple] {
+  height: 25%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  /* background-color: #fff; */
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  /* removes default arrow in some browsers */
+}
+
 .form-row select:focus {
   border: 1px solid var(--accent);
   outline: none;

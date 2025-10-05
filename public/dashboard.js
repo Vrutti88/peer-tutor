@@ -65,19 +65,37 @@ onAuthStateChanged(auth, async (user) => {
     // Fetch user role from Firestore
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-
+    
     if (userSnap.exists()) {
       const userData = userSnap.data();
       const role = userData.role || "learner"; // default role
-      
+      const select = document.getElementById("matchSubject");
+      const subjects = (userData.wantsToLearn || [])
+
+      if (select) {
+        select.innerHTML = `<option value="">Select Subject</option>`; // reset
+        if (Array.isArray(subjects) && subjects.length > 0) {
+          subjects.forEach(subj => {
+            const option = document.createElement("option");
+            option.value = subj;
+            option.textContent = subj;
+            select.appendChild(option);
+          });
+        } else {
+          select.innerHTML = `<option value="">No subjects found</option>`;
+        }
+      }
       // Show learner or tutor dashboard based on role
       toggleDashboard(role);
-    } else {
-      console.warn("User document not found.");
-      toggleDashboard("learner");
+      // if (role.toLowerCase() === "learner") {
+      //   populateSubjects();
+      // }
+      startDashboardListeners();
     }
-
-    startDashboardListeners();
+    else {
+      console.warn("User document not found.");
+      // toggleDashboard("learner");
+    }
   } else {
     window.location.href = "login.html";
   }
@@ -101,6 +119,31 @@ function toggleDashboard(role) {
   }
 }
 
+// Populate subjects dropdown from user's wantsToLearn
+// async function populateSubjects() {
+//   const user = auth.currentUser;
+//   if (!user) return;
+
+//   const userRef = doc(db, "users", user.uid);
+//   const userSnap = await getDoc(userRef);
+//   if (!userSnap.exists()) return;
+
+//   const data = userSnap.data();
+//   // Only use the subjects the user selected
+//   const subjects = data.wantsToLearn || [];
+//   const select = document.getElementById("matchSubject");
+
+//   // Always start with "Select Subject" placeholder
+//   select.innerHTML = `<option value="">Select Subject</option>`;
+
+//   // Add user-selected subjects
+//   if (select && subject) {
+//     select.options[0].value = subject;
+//     select.options[0].textContent = subject;
+//   }
+// }
+
+
 // =====================
 // 🔹 Quick Match
 // =====================
@@ -108,36 +151,49 @@ const matchForm = document.getElementById("matchForm");
 if (matchForm) {
   matchForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const subject = document.getElementById("matchSubject").value;
     const timeSlot = document.getElementById("matchTimeSlot").value;
     const resultDiv = document.getElementById("matchResult");
     resultDiv.innerHTML = "<div class='spinner'></div>";
 
+    if (!subject) {
+      resultDiv.innerHTML = "<p>Please select a subject.</p>";
+      return;
+    }
+
     try {
-      const findPeerMatches = httpsCallable(functions, "findPeerMatches");
-      const result = await findPeerMatches({
+      // Call your cloud function to get matches
+      const findPeerMatchesFn = httpsCallable(functions, "findPeerMatches");
+      const result = await findPeerMatchesFn({
         desiredMinutes: 120,
         maxKm: 30,
-        limit: 1
+        limit: 10 // fetch top 10 tutors
       });
 
-      if (result.data.matches.length === 0) {
-        resultDiv.innerHTML = "<p>No tutors found.</p>";
+      const matches = result.data.matches || [];
+      if (matches.length === 0) {
+        resultDiv.innerHTML = "<p>No tutors found for this subject.</p>";
         return;
       }
 
-      const best = result.data.matches[0];
-      resultDiv.innerHTML = `
-        <h3>Best Match Found!</h3>
-        <p><strong>${best.candidateId}</strong></p>
-        <p>Match Score: ${(best.score * 100).toFixed(2)} / 100</p>
-        <button class="btn" onclick="quickBook('${best.candidateId}','${subject}')">
-          Book This Tutor
-        </button>
-      `;
+      // Filter matches by subject
+      const tutorsForSubject = matches.filter(t => t.subjectScore > 0);
+
+      // Display tutors with Book button
+      resultDiv.innerHTML = tutorsForSubject.map(tutor => `
+        <div class="tutor-card">
+          <p><strong>${tutor.candidateId}</strong></p>
+          <p>Match Score: ${(tutor.score * 100).toFixed(2)} / 100</p>
+          <button class="btn" onclick="quickBook('${tutor.candidateId}', '${subject}', '${timeSlot}')">
+            Book This Tutor
+          </button>
+        </div>
+      `).join("");
+
     } catch (err) {
-      console.error("Match error:", err);
-      resultDiv.innerHTML = "<p>No tutors found.</p>";
+      console.error("Error finding tutors:", err);
+      resultDiv.innerHTML = "<p>Error finding tutors. Try again.</p>";
     }
   });
 }
@@ -210,26 +266,27 @@ function startDashboardListeners() {
       }
     });
 
-    document.getElementById("totalUsers").textContent = total;
-    document.getElementById("prospectCount").textContent = prospects;
-    document.getElementById("qualifiedCount").textContent = qualified;
-    document.getElementById("customerCount").textContent = customers;
-    document.getElementById("loyalCount").textContent = loyal;
+    // document.getElementById("totalUsers").textContent = total;
+    // document.getElementById("prospectCount").textContent = prospects;
+    // document.getElementById("qualifiedCount").textContent = qualified;
+    // document.getElementById("customerCount").textContent = customers;
+    // document.getElementById("loyalCount").textContent = loyal;
   });
 
   // Sessions
-  const unsubscribeSessions = onSnapshot(collection(db, "sessions"), (snap) => {
-    document.getElementById("totalSessions").textContent = snap.size;
-  });
+  // const unsubscribeSessions = onSnapshot(collection(db, "sessions"), (snap) => {
+  //   document.getElementById("totalSessions").textContent = snap.size;
+  // });
 
   // Backend Metrics
-  startMetricsListeners();
+  // startMetricsListeners();
 
-  unsubscribeDashboard = () => {
-    unsubscribeUsers();
-    unsubscribeSessions();
-  };
+  //   unsubscribeDashboard = () => {
+  //     unsubscribeUsers();
+  //     unsubscribeSessions();
+  //   };
 }
+
 
 
 
@@ -247,6 +304,3 @@ if (avatarClick) {
 document.getElementById("analytics-btn").addEventListener("click", function () {
   window.location.href = "analytics.html";
 });
-
-
-
