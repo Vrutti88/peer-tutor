@@ -12,7 +12,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  deleteDoc,
   addDoc,
+  updateDoc,
   query,
   where,
   onSnapshot,
@@ -23,6 +25,7 @@ import {
   getFunctions,
   httpsCallable
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-functions.js";
+import { calculateCompatibilityScore, PriorityQueue, findTopTutors } from './utils.js';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -65,7 +68,7 @@ onAuthStateChanged(auth, async (user) => {
     // Fetch user role from Firestore
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-    
+
     if (userSnap.exists()) {
       const userData = userSnap.data();
       const role = userData.role || "learner"; // default role
@@ -96,6 +99,8 @@ onAuthStateChanged(auth, async (user) => {
       console.warn("User document not found.");
       // toggleDashboard("learner");
     }
+    displayMySessions();
+    displayTutorDashboard();
   } else {
     window.location.href = "login.html";
   }
@@ -145,95 +150,405 @@ function toggleDashboard(role) {
 
 
 // =====================
-// 🔹 Quick Match
+// 🔹 Quick Match Using Priority Queue
 // =====================
-const matchForm = document.getElementById("matchForm");
-if (matchForm) {
-  matchForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+// 🔹 Quick Match
 
-    const subject = document.getElementById("matchSubject").value;
-    const timeSlot = document.getElementById("matchTimeSlot").value;
-    const resultDiv = document.getElementById("matchResult");
-    resultDiv.innerHTML = "<div class='spinner'></div>";
+// 🔹 Match tutors directly from Firestore
+async function findTutorsBySubject(subject, timeSlot) {
+  const resultDiv = document.getElementById("matchResult");
+  resultDiv.innerHTML = "<div class='spinner'></div>";
 
-    if (!subject) {
-      resultDiv.innerHTML = "<p>Please select a subject.</p>";
+  try {
+    // Fetch all tutors
+    const tutorsSnap = await getDocs(
+      query(collection(db, "users"), where("role", "==", "Tutor".toLowerCase()))
+    );
+    const tutors = tutorsSnap.docs.map(doc => doc.data());
+
+    // Filter tutors who have the selected subject
+    const filteredTutors = tutors.filter(tutor => {
+      const tutorSubjects = Array.isArray(tutor.subjects) ? tutor.subjects : [tutor.subjects];
+      return tutorSubjects.includes(subject);
+    });
+
+    if (filteredTutors.length === 0) {
+      resultDiv.innerHTML = "<p>No tutors found for this subject.</p>";
       return;
     }
 
-    try {
-      // Call your cloud function to get matches
-      const findPeerMatchesFn = httpsCallable(functions, "findPeerMatches");
-      const result = await findPeerMatchesFn({
-        desiredMinutes: 120,
-        maxKm: 30,
-        limit: 10 // fetch top 10 tutors
+    // 🔹 Use PriorityQueue from utils.js
+    const pq = new PriorityQueue();
+    filteredTutors.forEach(tutor => {
+      const score = calculateCompatibilityScore(tutor, {
+        subjects: [subject],
+        availability: [timeSlot]
       });
+      pq.enqueue(tutor, score);
+    });
 
-      const matches = result.data.matches || [];
-      if (matches.length === 0) {
-        resultDiv.innerHTML = "<p>No tutors found for this subject.</p>";
-        return;
-      }
+    const sortedTutors = [];
+    while (pq.size() > 0) {
+      sortedTutors.push(pq.dequeue());
+    }
 
-      // Filter matches by subject
-      const tutorsForSubject = matches.filter(t => t.subjectScore > 0);
-
-      // Display tutors with Book button
-      resultDiv.innerHTML = tutorsForSubject.map(tutor => `
+    // 🔹 Display tutors with Book button
+    resultDiv.innerHTML = sortedTutors.map(tutor => {
+      const tutorSubjects = Array.isArray(tutor.subjects) ? tutor.subjects.join(", ") : tutor.subjects;
+      const score = calculateCompatibilityScore(tutor, { subjects: [subject], availability: [timeSlot] });
+      return `
         <div class="tutor-card">
-          <p><strong>${tutor.candidateId}</strong></p>
-          <p>Match Score: ${(tutor.score * 100).toFixed(2)} / 100</p>
-          <button class="btn" onclick="quickBook('${tutor.candidateId}', '${subject}', '${timeSlot}')">
-            Book This Tutor
+          <p><strong>${tutor.displayName || tutor.email}</strong></p>
+          <p>Subjects: ${tutorSubjects}</p>
+          <p>Match Score: ${score}</p>
+          <button class="btn" onclick="bookSession('${tutor.email}', '${subject}', '${timeSlot}')">
+            Book Session
           </button>
         </div>
-      `).join("");
+      `;
+    }).join("");
 
-    } catch (err) {
-      console.error("Error finding tutors:", err);
-      resultDiv.innerHTML = "<p>Error finding tutors. Try again.</p>";
-    }
+  } catch (err) {
+    console.error("Error matching tutors:", err);
+    resultDiv.innerHTML = "<p>Error finding tutors. Try again.</p>";
+  }
+}
+
+// 🔹 Book session handler
+// window.bookSession = async (tutorEmail, subject, timeSlot) => {
+//   if (!currentUser) return alert("User not logged in");
+
+//   try {
+//     await addDoc(collection(db, "sessions"), {
+//       learnerEmail: currentUser.email,
+//       tutorEmail,
+//       subject,
+//       time: timeSlot,
+//       status: "scheduled",
+//       createdAt: serverTimestamp(),
+//     });
+//     alert("Session booked successfully!");
+//   } catch (err) {
+//     console.error("Booking error:", err);
+//     alert("Failed to book session: " + err.message);
+//   }
+// };
+
+// 🔹 Form submit
+const matchForm = document.getElementById("matchForm");
+if (matchForm) {
+  matchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const subject = document.getElementById("matchSubject").value;
+    const timeSlot = document.getElementById("matchTimeSlot").value;
+    if (!subject) return alert("Please select a subject.");
+    findTutorsBySubject(subject, timeSlot);
   });
 }
 
-window.quickBook = function (tutorEmail, subject) {
-  document.getElementById("bookTutorEmail").value = tutorEmail;
-  document.getElementById("bookSubject").value = subject;
-  document
-    .getElementById("bookingForm")
-    .scrollIntoView({ behavior: "smooth" });
+// 🔹 Function to fetch and display sessions for the current user
+async function displayMySessions() {
+  if (!currentUser) return;
+
+  const sessionsContainer = document.getElementById("mySessions");
+  sessionsContainer.innerHTML = "<div class='spinner'></div>";
+
+  try {
+    const q = query(
+      collection(db, "sessions"),
+      where("learnerEmail", "==", currentUser.email)
+    );
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      sessionsContainer.innerHTML = "<p>No sessions booked yet.</p>";
+      return;
+    }
+
+    sessionsContainer.innerHTML = snap.docs.map(doc => {
+      const data = doc.data();
+      let statusColor = "gray";
+
+      if (data.status === "accepted") statusColor = "green";
+      else if (data.status === "rejected") statusColor = "red";
+      else if (data.status === "pending") statusColor = "goldenrod";
+
+      return `
+        <div class="session-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:10px; background-color:#f8f9fa; margin-bottom:10px; border-radius:8px; border-left:3px solid #0e788b">
+  
+          <!-- First line: Tutor & Subject -->
+          <div style="display:flex; justify-content: space-evenly; width:100%; margin-bottom:6px;">
+            <p style="margin:0;"><strong>Tutor:</strong> ${data.tutorEmail}</p>
+            <p style="margin:0;"><strong>Subject:</strong> ${data.subject}</p>
+          </div>
+
+          <!-- Second line: Time & Status -->
+          <div style="display:flex; justify-content: space-evenly; width:100%; align-items:center; margin-bottom:6px;">
+            <p style="margin:0;"><strong>Time:</strong> ${data.time}</p>
+            <p style="margin:0; display:flex; align-items:center;">
+              <strong>Status:</strong>
+              <span class="status-badge" style="
+                background-color: ${statusColor};
+                color: white;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-size: 0.9em;
+                text-transform: capitalize;
+                margin-left: 6px;
+              ">
+                ${data.status}
+              </span>
+            </p>
+          </div>
+
+          <!-- Centered button -->
+          <div style="width:100%; display:flex; justify-content:center; margin-top:6px;">
+            <button class="btn btn-cancel" onclick="cancelSession('${doc.id}')">Cancel Session</button>
+          </div>
+
+        </div>
+
+      `;
+    }).join("");
+
+  } catch (err) {
+    console.error("Error fetching sessions:", err);
+    sessionsContainer.innerHTML = "<p>Failed to load sessions.</p>";
+  }
+}
+
+
+// 🔹 Cancel session by document ID
+window.cancelSession = async (sessionId) => {
+  if (!currentUser) return alert("User not logged in");
+
+  try {
+    await deleteDoc(doc(db, "sessions", sessionId));
+    alert("Session canceled successfully!");
+    displayMySessions(); // 🔹 Refresh session list
+  } catch (err) {
+    console.error("Cancel session error:", err);
+    alert("Failed to cancel session: " + err.message);
+  }
 };
 
-// =====================
-// 🔹 Book Session
-// =====================
-const bookingForm = document.getElementById("bookingForm");
-if (bookingForm) {
-  bookingForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const tutorEmail = document.getElementById("bookTutorEmail").value;
-    const time = document.getElementById("bookTime").value;
-    const subject = document.getElementById("bookSubject").value;
+// 🔹 Call this after booking a session
+window.bookSession = async (tutorEmail, subject, timeSlot) => {
+  if (!currentUser) return alert("User not logged in");
 
-    try {
-      await addDoc(collection(db, "sessions"), {
-        learnerEmail: currentUser.email,
-        tutorEmail,
-        subject,
-        time,
-        status: "scheduled",
-        createdAt: serverTimestamp(),
-      });
-      showMessage("bookingMessage", "Session booked successfully!", "success");
-      bookingForm.reset();
-    } catch (err) {
-      console.error("Booking error:", err);
-      showMessage("bookingMessage", err.message, "error");
+  try {
+    await addDoc(collection(db, "sessions"), {
+      learnerEmail: currentUser.email,
+      tutorEmail,
+      subject,
+      time: timeSlot,
+      status: "pending",    // ✅ Correct status
+      createdAt: serverTimestamp(),
+    });
+    alert("Session booked successfully!");
+    displayMySessions(); // refresh the session list
+  } catch (err) {
+    console.error("Booking error:", err);
+    alert("Failed to book session: " + err.message);
+  }
+};
+
+
+
+
+// 🔹 Tutor: Display pending requests and approved sessions
+async function displayTutorDashboard() {
+  if (!currentUser) return;
+
+  const pendingContainer = document.getElementById("pendingRequest");
+  const sessionsContainer = document.getElementById("tutorSession");
+
+  // Clear previous content
+  pendingContainer.innerHTML = "<div class='spinner'></div>";
+  sessionsContainer.innerHTML = "<div class='spinner'></div>";
+
+  try {
+    const q = query(
+      collection(db, "sessions"),
+      where("tutorEmail", "==", currentUser.email)
+    );
+    const snap = await getDocs(q);
+
+    const pending = [];
+    const sessions = [];
+
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+
+      if (data.status === "pending") pending.push({ id, ...data });
+      else sessions.push({ id, ...data }); // includes accepted & completed
+    });
+
+    // 🔹 Display pending requests
+    if (pending.length === 0) {
+      pendingContainer.innerHTML = "<p>No pending requests.</p>";
+    } else {
+      pendingContainer.innerHTML = pending.map(req => `
+        <div class="session-card" style="padding:10px; background-color:#f8f9fa; margin-bottom:10px; border-radius:8px; border-left:3px solid #0e788b">
+          <p><strong>Learner:</strong> ${req.learnerEmail}</p>
+          <p><strong>Subject:</strong> ${req.subject}</p>
+          <p><strong>Time:</strong> ${req.time}</p>
+          <button class="btn btn-accept" style="background-color: green; color: #fff;" onclick="approveRequest('${req.id}')">Accept</button>
+          <button class="btn btn-reject" style="background-color: red; color: #fff;" onclick="rejectRequest('${req.id}')">Reject</button>
+        </div>
+      `).join("");
     }
-  });
+
+    // 🔹 Sort sessions: accepted first, then completed
+    const acceptedFirst = sessions.sort((a, b) => {
+      if (a.status === "accepted" && b.status !== "accepted") return -1;
+      if (a.status !== "accepted" && b.status === "accepted") return 1;
+      return 0;
+    });
+
+    // 🔹 Display sessions (accepted + completed)
+    if (acceptedFirst.length === 0) {
+      sessionsContainer.innerHTML = "<p>No sessions yet.</p>";
+    } else {
+
+      sessionsContainer.innerHTML = acceptedFirst.map(sess => `
+        
+        <div class="session-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:10px; background-color:#f8f9fa; margin-bottom:10px; border-radius:8px; border-left:3px solid #0e788b">
+  
+          <!-- First line: Tutor & Subject -->
+          <div style="display:flex; justify-content: space-evenly; width:100%; margin-bottom:6px;">
+            <p style="margin:0;"><strong>Learner:</strong> ${sess.learnerEmail}</p>
+            <p style="margin:0;"><strong>Subject:</strong> ${sess.subject}</p>
+          </div>
+
+          <!-- Second line: Time & Status -->
+          <div style="display:flex; justify-content: space-evenly; width:100%; align-items:center; margin-bottom:6px;">
+            <p style="margin:0;"><strong>Time:</strong> ${sess.time}</p>
+            <p style="margin:0; display:flex; align-items:center;">
+              <strong>Status:</strong>
+              <span class="badge ${sess.status}" style="
+                
+                color: white;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-size: 0.9em;
+                text-transform: capitalize;
+                margin-left: 6px;
+              ">
+                ${sess.status}
+              </span>
+            </p>
+          </div>
+
+          <!-- Centered button -->
+          <div style="width:100%; display:flex; justify-content:center; margin-top:6px;">
+            ${sess.status === "accepted" ? `<button class="btn btn-complete" onclick="markComplete('${sess.id}')">Mark as Complete</button>` : ""}
+          </div>
+
+        </div>
+
+
+
+      `).join("");
+    }
+
+  } catch (err) {
+    console.error("Error loading tutor dashboard:", err);
+    pendingContainer.innerHTML = "<p>Failed to load pending requests.</p>";
+    sessionsContainer.innerHTML = "<p>Failed to load sessions.</p>";
+  }
 }
+
+// 🔹 Mark session as completed
+window.markComplete = async (sessionId) => {
+  if (!currentUser) return alert("User not logged in");
+
+  try {
+    await updateDoc(doc(db, "sessions", sessionId), {
+      status: "completed",
+      updatedAt: serverTimestamp()
+    });
+
+    displayTutorDashboard(); // refresh to show updated status
+    alert("Session marked as completed!");
+  } catch (err) {
+    console.error("Error marking session complete:", err);
+    alert("Failed to mark session as complete: " + err.message);
+  }
+};
+
+
+// 🔹 Approve pending request
+window.approveRequest = async (sessionId) => {
+  try {
+    await updateDoc(doc(db, "sessions", sessionId), { status: "accepted" });
+    displayTutorDashboard();
+    alert("Request accepted!");
+  } catch (err) {
+    console.error("Error approving request:", err);
+    alert("Failed to approve request: " + err.message);
+  }
+}
+
+// 🔹 Reject pending request
+window.rejectRequest = async (sessionId) => {
+  try {
+    await updateDoc(doc(db, "sessions", sessionId), { status: "rejected" });
+    displayTutorDashboard();
+    alert("Request rejected!");
+  } catch (err) {
+    console.error("Error rejecting request:", err);
+    alert("Failed to reject request: " + err.message);
+  }
+}
+
+
+// 🔹 Load dashboard on login
+// onAuthStateChanged(auth, user => {
+//   if (user) {
+//     currentUser = user;
+//     displayTutorDashboard();
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =====================
 // 🔹 Real-Time Dashboard
@@ -301,6 +616,9 @@ if (avatarClick) {
 }
 
 
-document.getElementById("analytics-btn").addEventListener("click", function () {
-  window.location.href = "analytics.html";
+document.querySelectorAll(".analytics-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    window.location.href = "analytics.html";
+  });
 });
+

@@ -2,6 +2,7 @@
 const functions = require('firebase-functions');
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const admin = require('firebase-admin');
+import cors from "cors";
 const { duplicateHash, computeLeadScore, haversineKm, toRad, overlapMinutes, jaccard } = require('./helpers');
 
 admin.initializeApp();
@@ -248,54 +249,76 @@ exports.computeReferralReach = functions.https.onCall(async (data) => {
  * findPeerMatches (callable)
  * - Main matching algorithm (reciprocal)
  */
-exports.findPeerMatches = functions.https.onCall(async (data, context) => {
-  if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Login required');
-  const uid = context.auth.uid;
-  const userSnap = await db.collection('users').doc(uid).get();
-  if (!userSnap.exists) throw new functions.https.HttpsError('not-found', 'User not found');
-  const user = userSnap.data();
-  const wantSubjects = user.wantsToLearn || [];
-  const candidateMap = new Map();
+// exports.findPeerMatches = functions.https.onCall(async (data, context) => {
+//   if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Login required');
+//   const uid = context.auth.uid;
+//   const userSnap = await db.collection('users').doc(uid).get();
+//   if (!userSnap.exists) throw new functions.https.HttpsError('not-found', 'User not found');
+//   const user = userSnap.data();
+//   const wantSubjects = user.wantsToLearn || [];
+//   const candidateMap = new Map();
 
-  for (const subj of wantSubjects) {
-    const qSnap = await db.collection('users').where('canTeach', 'array-contains', subj).get();
-    qSnap.forEach(d => { if (d.id !== uid) candidateMap.set(d.id, d.data()); });
-  }
+//   for (const subj of wantSubjects) {
+//     const qSnap = await db.collection('users').where('canTeach', 'array-contains', subj).get();
+//     qSnap.forEach(d => { if (d.id !== uid) candidateMap.set(d.id, d.data()); });
+//   }
 
-  const matches = [];
-  for (const [cid, cdata] of candidateMap.entries()) {
-    const reciprocalSubjects = (cdata.wantsToLearn || []).filter(s => (user.canTeach || []).includes(s));
-    if (reciprocalSubjects.length === 0) continue;
+//   const matches = [];
+//   for (const [cid, cdata] of candidateMap.entries()) {
+//     const reciprocalSubjects = (cdata.wantsToLearn || []).filter(s => (user.canTeach || []).includes(s));
+//     if (reciprocalSubjects.length === 0) continue;
 
-    const subjReciprocityCount = Math.min(
-      (wantSubjects.filter(s => (cdata.canTeach || []).includes(s)).length || 0),
-      reciprocalSubjects.length
-    );
-    const subjectScore = subjReciprocityCount / Math.max(1, wantSubjects.length);
+//     const subjReciprocityCount = Math.min(
+//       (wantSubjects.filter(s => (cdata.canTeach || []).includes(s)).length || 0),
+//       reciprocalSubjects.length
+//     );
+//     const subjectScore = subjReciprocityCount / Math.max(1, wantSubjects.length);
 
-    const desiredMinutes = data.desiredMinutes || 120;
-    const availabilityOverlap = overlapMinutes(user.availability, cdata.availability);
-    const availabilityScore = Math.min(1, availabilityOverlap / desiredMinutes);
+//     const desiredMinutes = data.desiredMinutes || 120;
+//     const availabilityOverlap = overlapMinutes(user.availability, cdata.availability);
+//     const availabilityScore = Math.min(1, availabilityOverlap / desiredMinutes);
 
-    const maxKm = data.maxKm || 30;
-    let locationScore = 0.5;
-    if (user.location && cdata.location) {
-      const d = (typeof haversineKm === 'function') ? haversineKm(user.location.lat, user.location.lng, cdata.location.lat, cdata.location.lng) : null;
-      if (d !== null) locationScore = Math.max(0, 1 - (d / maxKm));
+//     const maxKm = data.maxKm || 30;
+//     let locationScore = 0.5;
+//     if (user.location && cdata.location) {
+//       const d = (typeof haversineKm === 'function') ? haversineKm(user.location.lat, user.location.lng, cdata.location.lat, cdata.location.lng) : null;
+//       if (d !== null) locationScore = Math.max(0, 1 - (d / maxKm));
+//     }
+
+//     const ratingScore = (((user.rating || 4) + (cdata.rating || 4)) / 10);
+//     const styleScore = jaccard(user.learningStyles || [], cdata.learningStyles || []);
+
+//     const score = 0.45 * subjectScore + 0.2 * availabilityScore + 0.15 * locationScore + 0.1 * ratingScore + 0.1 * styleScore;
+
+//     matches.push({
+//       candidateId: cid,
+//       score: Number(score.toFixed(4)),
+//       subjectScore, availabilityScore, locationScore, ratingScore, styleScore
+//     });
+//   }
+
+//   matches.sort((a, b) => b.score - a.score);
+//   return { matches: matches.slice(0, (data.limit || 20)) };
+// });
+
+
+const corsHandler = cors({ origin: true });
+
+exports.findPeerMatches = functions.https.onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    try {
+      const { subject, limit } = req.body;
+
+      let queryRef = db.collection("users").where("role", "==", "Tutor");
+      if (subject) queryRef = queryRef.where("subjects", "array-contains", subject);
+
+      const tutorsSnap = await queryRef.limit(limit || 10).get();
+      const tutors = tutorsSnap.docs.map(doc => doc.data());
+
+      res.status(200).json({ matches: tutors });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send(err.message);
     }
-
-    const ratingScore = (((user.rating || 4) + (cdata.rating || 4)) / 10);
-    const styleScore = jaccard(user.learningStyles || [], cdata.learningStyles || []);
-
-    const score = 0.45 * subjectScore + 0.2 * availabilityScore + 0.15 * locationScore + 0.1 * ratingScore + 0.1 * styleScore;
-
-    matches.push({
-      candidateId: cid,
-      score: Number(score.toFixed(4)),
-      subjectScore, availabilityScore, locationScore, ratingScore, styleScore
-    });
-  }
-
-  matches.sort((a, b) => b.score - a.score);
-  return { matches: matches.slice(0, (data.limit || 20)) };
+  });
 });

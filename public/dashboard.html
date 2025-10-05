@@ -88,23 +88,11 @@
 
       <!-- Book Session Section -->
       <section class="section">
-        <h2>Book a Session</h2>
-        <form id="bookingForm">
-          <label>Tutor Email:</label>
-          <input type="email" id="bookTutorEmail" placeholder="tutor@example.com" required>
-
-          <label>Session Time:</label>
-          <input type="text" id="bookTime" placeholder="Mon 10-12" required>
-
-          <label>Subject:</label>
-          <input type="text" id="bookSubject" placeholder="mathematics" required>
-
-          <button type="submit" class="btn">Book Session</button>
-        </form>
-        <p class="form-message" id="bookingMessage"></p>
+        <h2>My Sessions</h2>
+        <div id="mySessions"></div>
       </section>
     </div>
-    <button id="analytics-btn" class="btn" style="width: 50%; display: block; margin: 20px auto;">View
+    <button class="analytics-btn btn" style="width: 50%; display: block; margin: 20px auto;">View
       analytics</button>
   </div>
 
@@ -154,38 +142,16 @@
       <!-- Quick Match Section -->
       <section class="section">
         <h2>Pending Requests</h2>
-        <!-- <form id="matchForm">
-          <label>Subject:</label>
-          <input type="text" id="matchSubject" placeholder="mathematics">
-
-          <label>Preferred Time Slot:</label>
-          <input type="text" id="matchTimeSlot" placeholder="Mon 10-12">
-
-          <button type="submit" class="btn">Find Best Tutor</button>
-        </form>
-        <div id="matchResult"></div> -->
+        <div id="pendingRequest"></div>
       </section>
 
-      <!-- Book Session Section -->
       <section class="section">
         <h2>My Sessions</h2>
-        <!-- <form id="bookingForm">
-          <label>Tutor Email:</label>
-          <input type="email" id="bookTutorEmail" placeholder="tutor@example.com" required>
-
-          <label>Session Time:</label>
-          <input type="text" id="bookTime" placeholder="Mon 10-12" required>
-
-          <label>Subject:</label>
-          <input type="text" id="bookSubject" placeholder="mathematics" required>
-
-          <button type="submit" class="btn">Book Session</button>
-        </form>
-        <p class="form-message" id="bookingMessage"></p> -->
+        <div id="tutorSession"></div>
       </section>
 
     </div>
-    <button id="analytics-btn" class="btn" style="width: 50%; display: block; margin: 20px auto;">View
+    <button class="analytics-btn btn" style="width: 50%; display: block; margin: 20px auto;">View
       analytics</button>
 
   </div>
