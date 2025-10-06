@@ -63,7 +63,9 @@ function displayStatistics() {
   const activeUsers = countActiveUsersLastNDays(allUsers, 7);
   document.getElementById('active-users').textContent = activeUsers;
 
-  document.getElementById('total-sessions').textContent = allSessions.length;
+  const completedSessions = allSessions.filter(s => s.status === 'completed').length;
+  document.getElementById('total-sessions').textContent = completedSessions;
+
 
   const repeatLearners = allUsers.filter(user =>
     user.role === 'learner' && (user.completedSessions || 0) > 1

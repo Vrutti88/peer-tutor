@@ -199,6 +199,46 @@ async function generateDemoData() {
         status: 'accepted',
         createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
         acceptedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+      },
+      {
+        learnerId: learnerIds[1],
+        tutorId: tutorIds[0],
+        subject: 'Mathematics',
+        timeSlot: 'Monday Afternoon 2:00 PM',
+        status: 'completed',
+        createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+        acceptedAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
+        completedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000)
+      },
+      {
+        learnerId: learnerIds[2],
+        tutorId: tutorIds[4],
+        subject: 'Psychology',
+        timeSlot: 'Thursday Morning 10:00 AM',
+        status: 'completed',
+        createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+        acceptedAt: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000),
+        completedAt: new Date(Date.now() - 23 * 24 * 60 * 60 * 1000)
+      },
+      {
+        learnerId: learnerIds[3],
+        tutorId: tutorIds[2],
+        subject: 'Biology',
+        timeSlot: 'Wednesday Afternoon 1:00 PM',
+        status: 'completed',
+        createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+        acceptedAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+        completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+      },
+      {
+        learnerId: learnerIds[0],
+        tutorId: tutorIds[3],
+        subject: 'History',
+        timeSlot: 'Friday Evening 5:00 PM',
+        status: 'completed',
+        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+        acceptedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+        completedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
       }
     ];
 
@@ -247,7 +287,7 @@ async function generateDemoData() {
         { userId: 'demo-learner-1', score: 10 },
         { userId: 'demo-learner-2', score: 8 },
         { userId: 'demo-learner-3', score: 9 },
-        { userId: 'demo-learner-4', score: 7 }
+        { userId: 'demo-learner-4', score: 6 }
       ]
     };
 

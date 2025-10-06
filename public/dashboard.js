@@ -265,6 +265,15 @@ async function displayMySessions() {
       return;
     }
 
+    // 🔹 Sort sessions so the latest (recently booked) ones appear on top
+    const sortedSessions = snap.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => {
+        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt).getTime();
+        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt).getTime();
+        return timeB - timeA; // latest first
+      });
+
     sessionsContainer.innerHTML = snap.docs.map(doc => {
       const data = doc.data();
       let statusColor = "gray";
@@ -471,6 +480,13 @@ window.markComplete = async (sessionId) => {
     });
 
     displayTutorDashboard(); // refresh to show updated status
+
+    // 🔹 Recalculate statistics if this page shows analytics
+    if (typeof displayStatistics === "function") {
+      await fetchAllSessions();  // make sure this repopulates allSessions
+      displayStatistics();
+    }
+
     alert("Session marked as completed!");
   } catch (err) {
     console.error("Error marking session complete:", err);
