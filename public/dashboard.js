@@ -274,8 +274,8 @@ async function displayMySessions() {
         return timeB - timeA; // latest first
       });
 
-    sessionsContainer.innerHTML = snap.docs.map(doc => {
-      const data = doc.data();
+    sessionsContainer.innerHTML = sortedSessions.map(data => {
+      // const data = doc.data();
       let statusColor = "gray";
 
       if (data.status === "accepted") statusColor = "green";
