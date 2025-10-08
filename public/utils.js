@@ -1,15 +1,17 @@
-// DSA Implementation: Priority Queue (Min Heap) for tutor matching
+// DSA Implementation: Priority Queue (Max Heap) for tutor matching
 export class PriorityQueue {
   constructor() {
     this.heap = [];
   }
 
+  // Add a tutor with a priority (match score)
   enqueue(item, priority) {
     const node = { item, priority };
     this.heap.push(node);
     this.bubbleUp(this.heap.length - 1);
   }
 
+  // Remove and return the tutor with highest priority
   dequeue() {
     if (this.heap.length === 0) return null;
     if (this.heap.length === 1) return this.heap.pop().item;
