@@ -2,23 +2,8 @@
 // 🔹 Firebase Setup
 // =====================
 import { app } from "./firebaseConfig.js";
-import {
-  getAuth,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-  addDoc,
-  updateDoc,
-  query,
-  where,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, getDocs, deleteDoc, addDoc, updateDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 import { calculateCompatibilityScore, PriorityQueue } from './utils.js';
 
 const auth = getAuth(app);
