@@ -125,47 +125,6 @@ export function analyzeReferralNetworkBFS(referrals, startUserId) {
   };
 }
 
-// DSA Implementation: DFS for referral network path finding
-export function findReferralPathDFS(referrals, startUserId, targetUserId) {
-  const graph = new Map();
-
-  for (const ref of referrals) {
-    if (!graph.has(ref.userId)) {
-      graph.set(ref.userId, []);
-    }
-    graph.get(ref.userId).push(ref.referredUserId);
-  }
-
-  const visited = new Set();
-  const path = [];
-
-  function dfs(currentUserId) {
-    if (currentUserId === targetUserId) {
-      path.push(currentUserId);
-      return true;
-    }
-
-    visited.add(currentUserId);
-    path.push(currentUserId);
-
-    if (graph.has(currentUserId)) {
-      for (const nextUser of graph.get(currentUserId)) {
-        if (!visited.has(nextUser)) {
-          if (dfs(nextUser)) {
-            return true;
-          }
-        }
-      }
-    }
-
-    path.pop();
-    return false;
-  }
-
-  dfs(startUserId);
-  return path;
-}
-
 // Matching Algorithm: Calculate tutor compatibility score
 export function calculateCompatibilityScore(tutor, learner) {
   let score = 0;
