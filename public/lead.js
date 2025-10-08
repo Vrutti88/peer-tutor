@@ -66,7 +66,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("canTeach").value = (data.canTeach || [])
       document.getElementById("wantsToLearn").value = (data.wantsToLearn || [])
       document.getElementById("board").value = data.board || "";
-      document.getElementById("notes").value = data.notes || "";
+      document.getElementById("availability").value = data.availability || "";
 
       // Update visibility after loading saved role
       updateSubjectFields();
@@ -96,21 +96,31 @@ leadForm.addEventListener("submit", async (e) => {
   const wantsToLearn = document.getElementById("wantsToLearn").value
     .split(",").map(s => s.trim()).filter(s => s);
   const board = document.getElementById("board").value.trim();
-  const notes = document.getElementById("notes").value.trim();
+  const availability = document.getElementById("availability").value.trim();
+
+  let subjects = [];
+  if (role === "Tutor") {
+    subjects = canTeach;
+  } else if (role === "Learner") {
+    subjects = wantsToLearn;
+  } else {
+    subjects = [...new Set([...canTeach, ...wantsToLearn])];
+  }
 
   try {
     await setDoc(doc(db, "users", currentUser.uid), {
       uid: currentUser.uid,
       name,
       email,
-      skillLevel,
-      city,
       role,
       canTeach,
       wantsToLearn,
-      board,
-      notes,
+      subjects,
+      availability,
+      skillLevel,
       stage: "prospect",
+      city,
+      board,
       createdAt: serverTimestamp()
     });
 

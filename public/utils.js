@@ -1,34 +1,3 @@
-// DSA Implementation: Hash function for email deduplication
-export class EmailHashTable {
-  constructor() {
-    this.table = new Map();
-  }
-
-  hash(email) {
-    let hash = 0;
-    for (let i = 0; i < email.length; i++) {
-      const char = email.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-    }
-    return Math.abs(hash);
-  }
-
-  add(email) {
-    const hashedEmail = this.hash(email.toLowerCase());
-    if (this.table.has(hashedEmail)) {
-      return false;
-    }
-    this.table.set(hashedEmail, email);
-    return true;
-  }
-
-  exists(email) {
-    const hashedEmail = this.hash(email.toLowerCase());
-    return this.table.has(hashedEmail);
-  }
-}
-
 // DSA Implementation: Priority Queue (Min Heap) for tutor matching
 export class PriorityQueue {
   constructor() {
@@ -223,38 +192,4 @@ export function calculateCompatibilityScore(tutor, learner) {
   score += Math.min(rating * 4, 20);
 
   return score;
-}
-
-// Find top tutors using priority queue
-export function findTopTutors(tutors, learner, topN = 3) {
-  const pq = new PriorityQueue();
-
-  for (const tutor of tutors) {
-    const score = calculateCompatibilityScore(tutor, learner);
-    pq.enqueue(tutor, score);
-  }
-
-  const topTutors = [];
-  for (let i = 0; i < topN && pq.size() > 0; i++) {
-    topTutors.push(pq.dequeue());
-  }
-
-  return topTutors;
-}
-
-// Show alert message
-export function showAlert(containerId, message, type = 'success') {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  container.innerHTML = `
-      <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-    `;
-
-  setTimeout(() => {
-    container.innerHTML = '';
-  }, 5000);
 }

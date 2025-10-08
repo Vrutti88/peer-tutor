@@ -95,23 +95,23 @@ body {
 }
 
 /* Hero */
-.hero {
+/* .hero {
   text-align: center;
   padding: 3rem 1rem;
   background: linear-gradient(135deg, var(--accent), var(--accent-light));
   color: white;
-}
+} */
 
-.hero h1 {
+/* .hero h1 {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-}
+} */
 
-.hero p {
+/* .hero p {
   font-size: 1rem;
   opacity: 0.9;
-}
+} */
 
 /* Container */
 .container {
@@ -297,81 +297,6 @@ h2 {
   color: var(--accent);
 }
 
-/* Table */
-.table-wrapper {
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.table th,
-.table td {
-  padding: 0.8rem;
-  border-bottom: 1px solid #f1f5f9;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.table th {
-  background: #f9fafb;
-  color: var(--muted);
-}
-
-/* Style the stage dropdown */
-.table td select {
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-  text-align: center;
-}
-
-/* Stage select colors */
-.stage-prospect {
-  background-color: #3b82f6;
-  color: white;
-}
-
-/* Blue */
-.stage-contacted {
-  background-color: #2563eb;
-  color: white;
-}
-
-/* Dark Blue */
-.stage-interested {
-  background-color: #facc15;
-  color: #1f2937;
-}
-
-/* Yellow */
-.stage-matched {
-  background-color: #10b981;
-  color: white;
-}
-
-/* Green */
-.stage-completed {
-  background-color: #6366f1;
-  color: white;
-}
-
-/* Indigo */
-
-.table tr:nth-child(even) {
-  background: #fafafa;
-}
-
-.table tr:hover {
-  background: #f1f5ff;
-}
 
 /* Badge for stages */
 .badge {
@@ -512,30 +437,6 @@ h2 {
   color: var(--accent);
 }
 
-/* Admin Tools */
-.admin-tool {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: var(--radius);
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-}
-
-.admin-tool h3 {
-  margin-bottom: 0.5rem;
-  color: var(--accent);
-  font-size: 1.1rem;
-}
-
-.admin-tool form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.admin-tool input {
-  max-width: 300px;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -548,113 +449,6 @@ h2 {
   }
 }
 
-
-
-/* Matches Grid */
-.matches-grid {
-  display: grid;
-  gap: 1rem;
-}
-
-/* Match Card */
-.match-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1rem;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.match-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-.match-card h4 {
-  margin: 0 0 0.5rem;
-  color: var(--accent);
-}
-
-.match-card .subtext {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
-/* Notes */
-.small-note {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.small-note.warning {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.small-note.error {
-  background: #f8d7da;
-  color: #842029;
-}
-
-/* Loader Spinner */
-.loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--accent);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  animation: spin 1s linear infinite;
-  margin: 1rem auto;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* General Sales Panel Styles */
-.sales-container h2 {
-  color: var(--accent);
-  margin-bottom: 0.3rem;
-}
-
-.sales-container .hint {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
-
-.sales-grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1.5rem;
-}
-
-.card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 1.2rem;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-}
-
-.card h3 {
-  margin-bottom: 1rem;
-  color: var(--accent);
-}
 
 .form-row {
   display: flex;
@@ -690,82 +484,6 @@ h2 {
 .btn:hover {
   background: var(--accent-light);
 }
-
-.btn-outline {
-  background: transparent;
-  border: 2px solid var(--accent);
-  color: var(--accent);
-}
-
-.btn-outline:hover {
-  background: var(--accent);
-  color: white;
-}
-
-/* Claimed leads list */
-.claimed-list {
-  margin-top: 1rem;
-  padding: 0.6rem;
-  max-height: 300px;
-  overflow-y: auto;
-  background: #f9fafb;
-  border-radius: var(--radius);
-  font-family: monospace;
-  font-size: 0.85rem;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .sales-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* .profile-card .btn {
-  align-self: flex-start;
-  margin-top: 0.5rem;
-} */
-
-/* Modal */
-/* .modal {
-  display: none; 
-  position: fixed; 
-  z-index: 200; 
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-  background: white;
-  margin: 10% auto;
-  padding: 2rem;
-  border-radius: var(--radius);
-  width: 90%;
-  max-width: 400px;
-  box-shadow: var(--shadow);
-} */
-
-.close {
-  float: right;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--muted);
-}
-
-.close:hover {
-  color: var(--accent);
-}
-
-/* .modal input {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-} */
-
 
 /* Google Button Updated Styling */
 
@@ -1021,8 +739,3 @@ form+.divider+.google-btn {
   font-size: 24px;
   font-weight: bold;
 }
-
-
-/* h2{
-  background-color:#cfd1d2;
-} */

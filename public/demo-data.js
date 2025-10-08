@@ -12,7 +12,7 @@ async function generateDemoData() {
         uid: 'demo-tutor-1',
         name: 'Sarah Johnson',
         email: 'sarah.tutor@demo.com',
-        role: 'tutor',
+        role: 'Tutor',
         subjects: ['Mathematics', 'Physics'],
         availability: ['Monday Morning', 'Wednesday Afternoon', 'Friday Evening'],
         skillLevel: 'Advanced',
@@ -26,7 +26,7 @@ async function generateDemoData() {
         uid: 'demo-tutor-2',
         name: 'Michael Chen',
         email: 'michael.tutor@demo.com',
-        role: 'tutor',
+        role: 'Tutor',
         subjects: ['Computer Science', 'Mathematics'],
         availability: ['Tuesday Morning', 'Thursday Afternoon', 'Friday Morning'],
         skillLevel: 'Advanced',
@@ -40,7 +40,7 @@ async function generateDemoData() {
         uid: 'demo-tutor-3',
         name: 'Emily Rodriguez',
         email: 'emily.tutor@demo.com',
-        role: 'tutor',
+        role: 'Tutor',
         subjects: ['Chemistry', 'Biology'],
         availability: ['Monday Afternoon', 'Wednesday Morning', 'Thursday Evening'],
         skillLevel: 'Intermediate',
@@ -54,7 +54,7 @@ async function generateDemoData() {
         uid: 'demo-tutor-4',
         name: 'David Kim',
         email: 'david.tutor@demo.com',
-        role: 'tutor',
+        role: 'Tutor',
         subjects: ['English', 'History'],
         availability: ['Tuesday Evening', 'Wednesday Afternoon', 'Friday Afternoon'],
         skillLevel: 'Advanced',
@@ -68,7 +68,7 @@ async function generateDemoData() {
         uid: 'demo-tutor-5',
         name: 'Priya Patel',
         email: 'priya.tutor@demo.com',
-        role: 'tutor',
+        role: 'Tutor',
         subjects: ['Economics', 'Psychology'],
         availability: ['Monday Evening', 'Thursday Morning', 'Friday Morning'],
         skillLevel: 'Intermediate',
@@ -85,7 +85,7 @@ async function generateDemoData() {
         uid: 'demo-learner-1',
         name: 'Alex Thompson',
         email: 'alex.learner@demo.com',
-        role: 'learner',
+        role: 'Learner',
         subjects: ['Mathematics', 'Physics'],
         availability: ['Monday Morning', 'Tuesday Afternoon', 'Friday Evening'],
         skillLevel: 'Beginner',
@@ -99,7 +99,7 @@ async function generateDemoData() {
         uid: 'demo-learner-2',
         name: 'Jessica Martinez',
         email: 'jessica.learner@demo.com',
-        role: 'learner',
+        role: 'Learner',
         subjects: ['Computer Science'],
         availability: ['Tuesday Morning', 'Thursday Afternoon'],
         skillLevel: 'Intermediate',
@@ -113,7 +113,7 @@ async function generateDemoData() {
         uid: 'demo-learner-3',
         name: 'Ryan Foster',
         email: 'ryan.learner@demo.com',
-        role: 'learner',
+        role: 'Learner',
         subjects: ['Chemistry', 'Biology'],
         availability: ['Monday Afternoon', 'Wednesday Morning'],
         skillLevel: 'Beginner',
@@ -127,7 +127,7 @@ async function generateDemoData() {
         uid: 'demo-learner-4',
         name: 'Sophia Williams',
         email: 'sophia.learner@demo.com',
-        role: 'learner',
+        role: 'Learner',
         subjects: ['English', 'History'],
         availability: ['Tuesday Evening', 'Friday Afternoon'],
         skillLevel: 'Intermediate',
@@ -201,45 +201,45 @@ async function generateDemoData() {
         acceptedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
       },
       {
-        learnerId: learnerIds[1],
-        tutorId: tutorIds[0],
-        subject: 'Mathematics',
-        timeSlot: 'Monday Afternoon 2:00 PM',
-        status: 'completed',
-        createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
-        acceptedAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
-        completedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000)
-      },
-      {
-        learnerId: learnerIds[2],
-        tutorId: tutorIds[4],
-        subject: 'Psychology',
-        timeSlot: 'Thursday Morning 10:00 AM',
-        status: 'completed',
-        createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
-        acceptedAt: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000),
-        completedAt: new Date(Date.now() - 23 * 24 * 60 * 60 * 1000)
-      },
-      {
-        learnerId: learnerIds[3],
-        tutorId: tutorIds[2],
-        subject: 'Biology',
-        timeSlot: 'Wednesday Afternoon 1:00 PM',
-        status: 'completed',
-        createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
-        acceptedAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
-        completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
-      },
-      {
-        learnerId: learnerIds[0],
-        tutorId: tutorIds[3],
-        subject: 'History',
-        timeSlot: 'Friday Evening 5:00 PM',
-        status: 'completed',
-        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-        acceptedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        completedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
-      }
+    learnerId: learnerIds[1],
+    tutorId: tutorIds[0],
+    subject: 'Mathematics',
+    timeSlot: 'Monday Afternoon 2:00 PM',
+    status: 'completed',
+    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+    acceptedAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
+    completedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000)
+  },
+  {
+    learnerId: learnerIds[2],
+    tutorId: tutorIds[4],
+    subject: 'Psychology',
+    timeSlot: 'Thursday Morning 10:00 AM',
+    status: 'completed',
+    createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+    acceptedAt: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000),
+    completedAt: new Date(Date.now() - 23 * 24 * 60 * 60 * 1000)
+  },
+  {
+    learnerId: learnerIds[3],
+    tutorId: tutorIds[2],
+    subject: 'Biology',
+    timeSlot: 'Wednesday Afternoon 1:00 PM',
+    status: 'completed',
+    createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+    acceptedAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+    completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+  },
+  {
+    learnerId: learnerIds[0],
+    tutorId: tutorIds[3],
+    subject: 'History',
+    timeSlot: 'Friday Evening 5:00 PM',
+    status: 'completed',
+    createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+    acceptedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    completedAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
+  }
     ];
 
     for (const session of demoSessions) {
@@ -307,7 +307,7 @@ async function generateDemoData() {
     console.log('NPS metrics created');
 
     console.log('Demo data generation complete!');
-    alert('Demo data created successfully! You now have 5 tutors, 4 learners, 5 sessions, and 3 referrals.');
+    alert('Demo data created successfully!');
 
   } catch (error) {
     console.error('Error generating demo data:', error);

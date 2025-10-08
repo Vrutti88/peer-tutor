@@ -7,14 +7,13 @@ import { countActiveUsersLastNDays, analyzeReferralNetworkBFS } from './utils.js
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-let currentUser = null;
+// let currentUser = null;
 let allUsers = [];
 let allSessions = [];
 let allReferrals = [];
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    currentUser = user;
     document.getElementById("profileName").textContent = user.displayName ||
       user.email.split("@")[0];
   } else {
@@ -66,13 +65,6 @@ function displayStatistics() {
   const completedSessions = allSessions.filter(s => s.status === 'completed').length;
   document.getElementById('total-sessions').textContent = completedSessions;
 
-
-  const repeatLearners = allUsers.filter(user =>
-    user.role === 'learner' && (user.completedSessions || 0) > 1
-  ).length;
-  const totalLearners = allUsers.filter(user => user.role === 'learner').length;
-  const loyaltyRate = totalLearners > 0 ? Math.round((repeatLearners / totalLearners) * 100) : 0;
-  document.getElementById('loyalty-rate').textContent = loyaltyRate + '%';
 
   document.getElementById('total-referrals').textContent = allReferrals.length;
 }
@@ -258,42 +250,45 @@ function createSubjectChart() {
 
 function displayStageDistribution() {
   const stages = {
-    prospect: { count: 0, description: 'New signups, not yet active' },
-    qualified: { count: 0, description: 'Users with at least 1 session booked' },
-    customer: { count: 0, description: 'Users with completed sessions' },
-    loyal: { count: 0, description: 'Users with 3+ completed sessions' }
+    prospect: { count: 0, description: 'New signups, not yet active', color: '#6c757d' },
+    qualified: { count: 0, description: 'Users with at least 1 session booked', color: '#0d6efd' },
+    customer: { count: 0, description: 'Users with completed sessions', color: '#198754' },
+    loyal: { count: 0, description: 'Users with 3+ completed sessions', color: '#ffc107' }
   };
 
   allUsers.forEach(user => {
     const stage = user.stage || 'prospect';
-    if (stages[stage]) {
-      stages[stage].count++;
-    }
+    if (stages[stage]) stages[stage].count++;
   });
 
   const stageDiv = document.getElementById('stage-distribution');
-  let html = '';
+  let html = '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">';
 
   for (const [stage, data] of Object.entries(stages)) {
     const percentage = allUsers.length > 0 ? Math.round((data.count / allUsers.length) * 100) : 0;
     html += `
-      <div class="mb-3">
-        <div class="d-flex justify-content-between mb-1">
-          <strong>${stage.charAt(0).toUpperCase() + stage.slice(1)}</strong>
-          <span>${data.count} (${percentage}%)</span>
+      <div style="
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      ">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="font-weight:600; color:${data.color}; font-size: 0.9em; text-transform: uppercase;">${stage}</span>
+          <span style="font-size: 0.85em;">${data.count} (${percentage}%)</span>
         </div>
-        <div class="progress" style="height: 25px;">
-          <div class="progress-bar" role="progressbar" style="width: ${percentage}%">
-            ${percentage}%
-          </div>
+        <div style="background:#e9ecef; border-radius:8px; height:14px; overflow:hidden;">
+          <div style="width:${percentage}%; background:${data.color}; height:100%;"></div>
         </div>
-        <small class="text-muted">${data.description}</small>
+        <small style="color:#6c757d; font-size:0.75em; display:block; margin-top:2px;">${data.description}</small>
       </div>
     `;
   }
 
+  html += '</div>';
   stageDiv.innerHTML = html;
 }
+
 
 // 🔹 Business Metrics Computation (RFM, CLV, NPS)
 
@@ -384,9 +379,6 @@ async function loadBusinessMetrics() {
   }
 }
 
-
-
-
 window.analyzeReferralNetwork = function () {
   if (allReferrals.length === 0) {
     document.getElementById('referral-details').innerHTML = '<p class="text-muted">No referral data available</p>';
@@ -425,8 +417,6 @@ function setupLogout() {
     });
   }
 }
-
-
 
 // 🔹 Redirect avatar click → profile.html
 const avatarClick = document.getElementById("avatarClick");

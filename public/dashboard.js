@@ -17,45 +17,15 @@ import {
   updateDoc,
   query,
   where,
-  onSnapshot,
   serverTimestamp,
-  writeBatch
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-import {
-  getFunctions,
-  httpsCallable
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-functions.js";
-import { calculateCompatibilityScore, PriorityQueue, findTopTutors } from './utils.js';
+import { calculateCompatibilityScore, PriorityQueue } from './utils.js';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
-const functions = getFunctions(app);
 
 let currentUser = null;
 
-// =====================
-// 🔹 Utility Functions
-// =====================
-function showMessage(elementId, message, type = "success") {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.textContent = message;
-  el.className = `form-message ${type}`;
-  setTimeout(() => {
-    el.textContent = "";
-    el.className = "form-message";
-  }, 4000);
-}
-
-function hashEmail(email) {
-  let hash = 0;
-  for (let i = 0; i < email.length; i++) {
-    const char = email.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-  return Math.abs(hash).toString(36);
-}
 
 // =====================
 // 🔹 Auth State
@@ -71,7 +41,7 @@ onAuthStateChanged(auth, async (user) => {
 
     if (userSnap.exists()) {
       const userData = userSnap.data();
-      const role = userData.role || "learner"; // default role
+      const role = userData.role || "Learner"; // default role
       const select = document.getElementById("matchSubject");
       const subjects = (userData.wantsToLearn || [])
 
@@ -90,10 +60,6 @@ onAuthStateChanged(auth, async (user) => {
       }
       // Show learner or tutor dashboard based on role
       toggleDashboard(role);
-      // if (role.toLowerCase() === "learner") {
-      //   populateSubjects();
-      // }
-      startDashboardListeners();
     }
     else {
       console.warn("User document not found.");
@@ -124,35 +90,10 @@ function toggleDashboard(role) {
   }
 }
 
-// Populate subjects dropdown from user's wantsToLearn
-// async function populateSubjects() {
-//   const user = auth.currentUser;
-//   if (!user) return;
-
-//   const userRef = doc(db, "users", user.uid);
-//   const userSnap = await getDoc(userRef);
-//   if (!userSnap.exists()) return;
-
-//   const data = userSnap.data();
-//   // Only use the subjects the user selected
-//   const subjects = data.wantsToLearn || [];
-//   const select = document.getElementById("matchSubject");
-
-//   // Always start with "Select Subject" placeholder
-//   select.innerHTML = `<option value="">Select Subject</option>`;
-
-//   // Add user-selected subjects
-//   if (select && subject) {
-//     select.options[0].value = subject;
-//     select.options[0].textContent = subject;
-//   }
-// }
-
 
 // =====================
 // 🔹 Quick Match Using Priority Queue
 // =====================
-// 🔹 Quick Match
 
 // 🔹 Match tutors directly from Firestore
 async function findTutorsBySubject(subject, timeSlot) {
@@ -162,7 +103,7 @@ async function findTutorsBySubject(subject, timeSlot) {
   try {
     // Fetch all tutors
     const tutorsSnap = await getDocs(
-      query(collection(db, "users"), where("role", "==", "Tutor".toLowerCase()))
+      query(collection(db, "users"), where("role", "==", "Tutor"))
     );
     const tutors = tutorsSnap.docs.map(doc => doc.data());
 
@@ -213,26 +154,6 @@ async function findTutorsBySubject(subject, timeSlot) {
     resultDiv.innerHTML = "<p>Error finding tutors. Try again.</p>";
   }
 }
-
-// 🔹 Book session handler
-// window.bookSession = async (tutorEmail, subject, timeSlot) => {
-//   if (!currentUser) return alert("User not logged in");
-
-//   try {
-//     await addDoc(collection(db, "sessions"), {
-//       learnerEmail: currentUser.email,
-//       tutorEmail,
-//       subject,
-//       time: timeSlot,
-//       status: "scheduled",
-//       createdAt: serverTimestamp(),
-//     });
-//     alert("Session booked successfully!");
-//   } catch (err) {
-//     console.error("Booking error:", err);
-//     alert("Failed to book session: " + err.message);
-//   }
-// };
 
 // 🔹 Form submit
 const matchForm = document.getElementById("matchForm");
@@ -312,7 +233,10 @@ async function displayMySessions() {
 
           <!-- Centered button -->
           <div style="width:100%; display:flex; justify-content:center; margin-top:6px;">
-            <button class="btn btn-cancel" onclick="cancelSession('${doc.id}')">Cancel Session</button>
+            ${["completed", "rejected"].includes(data.status?.toLowerCase())
+          ? "" // hide cancel button
+          : `<button class="btn btn-cancel" onclick="cancelSession('${doc.id}')">Cancel Session</button>`
+        }
           </div>
 
         </div>
@@ -361,8 +285,6 @@ window.bookSession = async (tutorEmail, subject, timeSlot) => {
     alert("Failed to book session: " + err.message);
   }
 };
-
-
 
 
 // 🔹 Tutor: Display pending requests and approved sessions
@@ -518,110 +440,6 @@ window.rejectRequest = async (sessionId) => {
     alert("Failed to reject request: " + err.message);
   }
 }
-
-
-// 🔹 Load dashboard on login
-// onAuthStateChanged(auth, user => {
-//   if (user) {
-//     currentUser = user;
-//     displayTutorDashboard();
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =====================
-// 🔹 Real-Time Dashboard
-// =====================
-function startDashboardListeners() {
-  // Users
-  const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
-    let total = 0,
-      prospects = 0,
-      qualified = 0,
-      customers = 0,
-      loyal = 0;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      total++;
-      switch (data.stage) {
-        case "prospect":
-          prospects++;
-          break;
-        case "qualified":
-          qualified++;
-          break;
-        case "customer":
-          customers++;
-          break;
-        case "loyal":
-          loyal++;
-          break;
-      }
-    });
-
-    // document.getElementById("totalUsers").textContent = total;
-    // document.getElementById("prospectCount").textContent = prospects;
-    // document.getElementById("qualifiedCount").textContent = qualified;
-    // document.getElementById("customerCount").textContent = customers;
-    // document.getElementById("loyalCount").textContent = loyal;
-  });
-
-  // Sessions
-  // const unsubscribeSessions = onSnapshot(collection(db, "sessions"), (snap) => {
-  //   document.getElementById("totalSessions").textContent = snap.size;
-  // });
-
-  // Backend Metrics
-  // startMetricsListeners();
-
-  //   unsubscribeDashboard = () => {
-  //     unsubscribeUsers();
-  //     unsubscribeSessions();
-  //   };
-}
-
-
-
-
-
 
 // 🔹 Redirect avatar click → profile.html
 const avatarClick = document.getElementById("avatarClick");
