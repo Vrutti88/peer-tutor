@@ -66,7 +66,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("canTeach").value = (data.canTeach || [])
       document.getElementById("wantsToLearn").value = (data.wantsToLearn || [])
       document.getElementById("board").value = data.board || "";
-      document.getElementById("availability").value = data.availability || "";
+      document.getElementById("availability").value = data.availability || [];
 
       // Update visibility after loading saved role
       updateSubjectFields();
@@ -96,7 +96,8 @@ leadForm.addEventListener("submit", async (e) => {
   const wantsToLearn = document.getElementById("wantsToLearn").value
     .split(",").map(s => s.trim()).filter(s => s);
   const board = document.getElementById("board").value.trim();
-  const availability = document.getElementById("availability").value.trim();
+  const availability = document.getElementById("availability").value
+    .split(",").map(s => s.trim()).filter(s => s);
 
   let subjects = [];
   if (role === "Tutor") {

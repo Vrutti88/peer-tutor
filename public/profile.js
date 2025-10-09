@@ -35,7 +35,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("canTeach").value = (data.canTeach || []).join(", ");
     document.getElementById("wantsToLearn").value = (data.wantsToLearn || []).join(", ");
     document.getElementById("board").value = data.board || "";
-    document.getElementById("availability").value = data.availability || "";
+    document.getElementById("availability").value = (data.availability || []).join(", ");
   } else {
     // Pre-fill email if no profile yet
     document.getElementById("email").value = user.email;
@@ -57,7 +57,7 @@ profileForm.addEventListener("submit", async (e) => {
     canTeach: document.getElementById("canTeach").value.split(",").map(s => s.trim()).filter(s => s),
     wantsToLearn: document.getElementById("wantsToLearn").value.split(",").map(s => s.trim()).filter(s => s),
     board: document.getElementById("board").value.trim(),
-    availability: document.getElementById("availability").value.trim(),
+    availability: document.getElementById("availability").value.split(",").map(s => s.trim()).filter(s => s),
     updatedAt: new Date()
   };
 
