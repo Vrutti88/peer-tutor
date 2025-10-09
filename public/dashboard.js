@@ -155,7 +155,6 @@ async function displayMySessions() {
   if (!currentUser) return;
 
   const sessionsContainer = document.getElementById("mySessions");
-  sessionsContainer.innerHTML = "<div class='spinner'></div>";
 
   try {
     const q = query(
