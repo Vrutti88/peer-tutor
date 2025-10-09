@@ -27,9 +27,9 @@ onAuthStateChanged(auth, async (user) => {
     if (userSnap.exists()) {
       const userData = userSnap.data();
       const role = userData.role || "Learner"; // default role
+      
       const select = document.getElementById("matchSubject");
       const subjects = (userData.wantsToLearn || [])
-
       if (select) {
         select.innerHTML = `<option value="">Select Subject</option>`; // reset
         if (Array.isArray(subjects) && subjects.length > 0) {
