@@ -17,7 +17,6 @@ let currentUser = null;
 // =====================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    currentUser = user;
     document.getElementById("profileName").textContent = user.displayName ||
       user.email.split("@")[0];
     // Fetch user role from Firestore
