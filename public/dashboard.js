@@ -82,7 +82,6 @@ function toggleDashboard(role) {
 
 async function findTutorsBySubject(subject, timeSlot) {
   const resultDiv = document.getElementById("matchResult");
-  resultDiv.innerHTML = "<div class='spinner'></div>";
 
   try {
     // Fetch all tutors
@@ -278,9 +277,6 @@ async function displayTutorDashboard() {
   const pendingContainer = document.getElementById("pendingRequest");
   const sessionsContainer = document.getElementById("tutorSession");
 
-  // Clear previous content
-  pendingContainer.innerHTML = "<div class='spinner'></div>";
-  sessionsContainer.innerHTML = "<div class='spinner'></div>";
 
   try {
     const q = query(
