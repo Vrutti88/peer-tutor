@@ -23,7 +23,6 @@ onAuthStateChanged(auth, async (user) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
-  setupLogout();
 });
 
 function checkAuth() {
@@ -402,21 +401,6 @@ window.analyzeReferralNetwork = function () {
 
   document.getElementById('referral-details').innerHTML = detailsHtml;
 };
-
-function setupLogout() {
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      try {
-        await signOut(auth);
-        window.location.href = '/';
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    });
-  }
-}
 
 // 🔹 Redirect avatar click → profile.html
 const avatarClick = document.getElementById("avatarClick");
