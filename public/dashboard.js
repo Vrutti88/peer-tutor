@@ -80,7 +80,6 @@ function toggleDashboard(role) {
 // 🔹 Quick Match Using Priority Queue
 // =====================
 
-// 🔹 Match tutors directly from Firestore
 async function findTutorsBySubject(subject, timeSlot) {
   const resultDiv = document.getElementById("matchResult");
   resultDiv.innerHTML = "<div class='spinner'></div>";
@@ -260,7 +259,7 @@ window.bookSession = async (tutorEmail, subject, timeSlot) => {
       tutorEmail,
       subject,
       time: timeSlot,
-      status: "pending",    // ✅ Correct status
+      status: "pending",
       createdAt: serverTimestamp(),
     });
     alert("Session booked successfully!");
