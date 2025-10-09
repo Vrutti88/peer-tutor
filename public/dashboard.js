@@ -185,6 +185,11 @@ async function displayMySessions() {
       else if (data.status === "rejected") statusColor = "red";
       else if (data.status === "pending") statusColor = "goldenrod";
 
+      if (["canceled"].includes(data.status?.toLowerCase())) {
+        // Skip rendering this session completely
+        return ''; // this will remove the entire div
+      }
+
       return `
         <div class="session-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:10px; background-color:#f8f9fa; margin-bottom:10px; border-radius:8px; border-left:3px solid #0e788b">
   
