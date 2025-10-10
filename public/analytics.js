@@ -64,7 +64,6 @@ function displayStatistics() {
   const completedSessions = allSessions.filter(s => s.status === 'completed').length;
   document.getElementById('total-sessions').textContent = completedSessions;
 
-
   document.getElementById('total-referrals').textContent = allReferrals.length;
 }
 
